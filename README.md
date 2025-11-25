@@ -21,18 +21,19 @@ project/
  ├── src/
  │    ├── modules/
  │    │     ├── users/
- │    │     │     ├── users.controller.ts
- │    │     │     ├── users.service.ts
- │    │     │     └── users.routes.ts
+ │    |     |     ├── users.controller.ts
+ │    │     │     ├─ users.service.ts
+ │    │     │     |── users.routes.ts
  |    |     |     |__ user.types.ts
  |    |     |     |__ user.repositoriy.ts
  │    │     └── posts/
- │    ├── middlewares/
+ │    |__ middlewares/
  │    └── server.ts
  ├── prisma/
- │    └── schema.prisma
- ├── package.json
+ │    |__ schema.prisma
+ |__ package.json
  ├── README.md
+ |__.gitignore
 
 src/modules - модулі бізнес логіки
 src/midldlewares - обработчик між роутером та контролером
@@ -40,8 +41,12 @@ prisma - ORM
 # Code architecture
 
 <!-- TODO -->
-
------
+Ми використовуємо модульну архітектуру:
+ Кожен модуль відповідає за одну бізнес-логіку.
+ Усередині кожного модуля знаходяться controller, service та роути.
+ Controller приймає запити та видає помилки
+ Service містить бізнес-логіку.
+ Prisma працює із базою даних.
 
 # Additional
 
