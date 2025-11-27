@@ -4,12 +4,12 @@
 
 # Navigation
 
-#### [Team](#team)
-#### [Architecture](#code-architecture)
-#### [Structure](#project-structure)
-#### [API](#api)
-#### [Additional: Code Style](#code-style)
-#### [Additional: More Info](#more-info)
+- [Team](#team)
+- [Architecture](#code-architecture)
+- [Structure](#project-structure)
+- [API](#api)
+- [Additional: Code Style](#code-style)
+- [Additional: More Info](#more-info)
 
 -----
 
@@ -29,7 +29,7 @@ This project has Backend and Frontend as its 2 main parts. They have unique role
 
 ## Backend architecture
 
-### Backend architecture is based on popular, yet quite simple Onion type architecture, in which there are 4 layers:
+Backend architecture is based on popular, yet quite simple Onion type architecture, in which there are 4 layers:
 
 - Router - First layer, accepts request and selects corresponding Controller function to process the request. Can also call Middleware as pre-processors.
 - Controller - Second layer, makes basic request processing, has basic data validators and can interact with Service.
@@ -40,7 +40,7 @@ This project has Backend and Frontend as its 2 main parts. They have unique role
 
 # Project structure
 
-### This project has structure that divides it by apps. Every app has its own function.
+This project has structure that divides it by apps. Every app has its own function.
 
 ## Backend part Structure
 
@@ -55,7 +55,8 @@ _This list will increase by the time_
 
 # API
 
-### As this project has Frontend, it has API as well, so it can communicate with Backend. It has features such as:
+As this project has Frontend, it has API as well, so it can communicate with Backend. It has features such as:
+
 - Authorization - It has authorization keys that are used to identify users between different devices and IPs.
 - Actions - It allows user to perform many operations, starting from simple such as getting product page, up to creating whole order, according to info acquired from Backend.
 - Optimization - It has capabulities to allow Pagination and quick filter/sort options, so user can swiftly find the product they want.
@@ -66,7 +67,7 @@ _This list will increase by the time_
 
 ## Code style
 
-#### Code, written in this project has basic code styling, such as:
+Code, written in this project has basic code styling, such as:
 - 4 spaces per one tabulation
 - Creating empty line between large functions
 - Splitting code into different modules
