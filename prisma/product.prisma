@@ -3,7 +3,8 @@ model Product {
     name         String
     description  String
     price        Int
-    category     Category @relation(fields: [], references: [id])
+    category     Category @relation(fields: [categoryId], references: [id])
+    categoryId   Int
     discount     Int
     media      String
     count      Int

@@ -9,6 +9,8 @@ model Order {
     paymentMethod String
     totalPrice Int
     totalDiscount Int
-    user      User @relation(fields: [], references: [id])
-    location  Location @relation(fields: [], references: [id])   
+    user      User @relation(fields: [userId], references: [id])
+    userId    Int
+    location  Location @relation(fields: [locationId], references: [id])   
+    locationId Int
 }

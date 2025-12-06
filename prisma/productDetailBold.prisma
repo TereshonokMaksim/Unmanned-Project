@@ -2,5 +2,6 @@ model ProductDetailBold {
     id           Int      @id @default(autoincrement())
     text         String
     orderNum     Int
-    detailData  ProductDetailData @relation(fields: [], references: [id])
+    detailData  ProductDetailData @relation(fields: [productDetailDataId], references: [id])
+    productDetailDataId  Int
 }

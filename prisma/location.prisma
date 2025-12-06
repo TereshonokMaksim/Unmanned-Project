@@ -6,5 +6,6 @@ model Location {
     houseNum  String
     flatNum   String
     entranceNum  String
-    user      User @relation(fields: [], references: [id])
+    user      User @relation(fields: [userId], references: [id])
+    userId    Int
 }

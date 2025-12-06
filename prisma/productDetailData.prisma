@@ -3,4 +3,5 @@ model ProductDetailData {
     name         String
     orderNum     Int
     detailBlock  ProductMainBlock @relation(fields: [], references: [id])
+    
 }
