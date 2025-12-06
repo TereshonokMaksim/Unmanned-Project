@@ -93,6 +93,11 @@ As this project has Frontend, it has API as well, so it can communicate with Bac
       {
         error:"string"
       }
+
+
+
+      
+----------
 - GET /product/
     description - get a list of product
       200 - Successfull request
@@ -109,6 +114,10 @@ As this project has Frontend, it has API as well, so it can communicate with Bac
       {
         error:"string"
       }
+
+
+
+-----------
 - GET /product/:id
     description - get one product by ID
       200 - Successful request
@@ -129,6 +138,10 @@ As this project has Frontend, it has API as well, so it can communicate with Bac
       {
         error:"string"
       }
+
+
+
+----------
 - PATCH /product/:id
     description - update product
       200 - Successfull request
@@ -157,6 +170,9 @@ As this project has Frontend, it has API as well, so it can communicate with Bac
       {
         error:"string"
       }
+
+
+---------
 - DELETE /product/:id
     description - delete product
       200 - Successfull request
