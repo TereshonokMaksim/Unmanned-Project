@@ -1,7 +1,0 @@
-model ProductDetailData {
-    id           Int      @id @default(autoincrement())
-    name         String
-    orderNum     Int
-    detailBlock  ProductMainBlock @relation(fields: [], references: [id])
-    
-}

@@ -1,7 +1,0 @@
-model ProductDetailBasic {
-    id           Int      @id @default(autoincrement())
-    text         String
-    orderNum     Int
-    detailData  ProductDetailData @relation(fields: [productDetailDataId], references: [id])
-    productDetailDataId  Int
-}

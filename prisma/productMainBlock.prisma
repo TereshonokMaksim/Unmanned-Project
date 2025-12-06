@@ -1,8 +1,0 @@
-model ProductMainBlock {
-    id           Int      @id @default(autoincrement())
-    title        String
-    description  String
-    media        String
-    align       String 
-    orderNum     Int
-}
