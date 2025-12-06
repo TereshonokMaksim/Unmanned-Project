@@ -72,6 +72,117 @@ As this project has Frontend, it has API as well, so it can communicate with Bac
 - Authorization - It has authorization keys that are used to identify users between different devices and IPs.
 - Actions - It allows user to perform many operations, starting from simple such as getting product page, up to creating whole order, according to info acquired from Backend.
 - Optimization - It has capabulities to allow Pagination and quick filter/sort options, so user can swiftly find the product they want.
+## Endpoints
+- POST /product/
+    description - create product
+      201 - Successful resource creation
+      {
+        id:"int"
+        count:"int"
+        discount:"int"
+        name:"string"
+        description:"string"
+        media:"string"
+      }
+    Errors:
+      400 - There is no required field
+      {
+        error:"string"
+      }
+      500 - Server Error
+      {
+        error:"string"
+      }
+- GET /product/
+    description - get a list of product
+      200 - Successfull request
+      {
+        id:"int"
+        count:"int"
+        discount:"int"
+        name:"string"
+        description:"string"
+        media:"string"
+      }
+    Errors:
+      500 - Server Error
+      {
+        error:"string"
+      }
+- GET /product/:id
+    description - get one product by ID
+      200 - Successful request
+      {
+        id:"int"
+        count:"int"
+        discount:"int"
+        name:"string"
+        description:"string"
+        media:"string"
+      }
+    Errors:
+      404 - Product not found
+      {
+        error:"string"
+      }
+      500 - Server Error
+      {
+        error:"string"
+      }
+- PATCH /product/:id
+    description - update product
+      200 - Successfull request
+      {
+        id:"int"
+        count:"int"
+        discount:"int"
+        name:"string"
+        description:"string"
+        media:"string"
+      }
+    Errors:
+      400 - There is no required field
+      {
+        error:"string"
+      }
+      401 - no acces
+      {
+        error: string
+      }
+      404 - product not found
+      {
+        error: string
+      }
+      500 - Server Error
+      {
+        error:"string"
+      }
+- DELETE /product/:id
+    description - delete product
+      200 - Successfull request
+      {
+        id:"int"
+        count:"int"
+        discount:"int"
+        name:"string"
+        description:"string"
+        media:"string"
+      }
+    Errors:
+      401 - no access
+      {
+        error:"string"
+      }
+      404 - product not found{
+        error: string
+      }
+      500 - Server Error
+      {
+        error:"string"
+      }
+
+  
+
 
 ----
 
