@@ -1,0 +1,10 @@
+model Location {
+    id           Int      @id @default(autoincrement())
+    active        Boolean   @default(true)
+    city         String
+    street       String
+    houseNum  String
+    flatNum   String
+    entranceNum  String
+    user      User @relation(fields: [], references: [id])
+}

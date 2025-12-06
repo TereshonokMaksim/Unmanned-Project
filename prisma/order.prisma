@@ -1,0 +1,14 @@
+model Order {
+    id           Int      @id @default(autoincrement())
+    customerName String
+    castomerPatronymic String
+    customerPhoneNumber String
+    customerEmail String
+    customerComment String
+    deliveryMethod String
+    paymentMethod String
+    totalPrice Int
+    totalDiscount Int
+    user      User @relation(fields: [], references: [id])
+    location  Location @relation(fields: [], references: [id])   
+}

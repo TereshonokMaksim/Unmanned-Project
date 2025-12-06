@@ -1,0 +1,7 @@
+model ProductForOrder {
+    id          Int      @id @default(autoincrement())
+    product     Product @relation(fields: [], references: [id])
+    order       Order @relation(fields: [], references: [id])
+    count      Int
+    discound    Int
+}

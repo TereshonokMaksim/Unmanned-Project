@@ -1,0 +1,10 @@
+model Product {
+    id           Int      @id @default(autoincrement())
+    name         String
+    description  String
+    price        Int
+    category     Category @relation(fields: [], references: [id])
+    discount     Int
+    media      String
+    count      Int
+}

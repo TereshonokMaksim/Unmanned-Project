@@ -1,0 +1,10 @@
+model User {
+  id       Int    @id @default(autoincrement())
+  name String
+  surname String
+  partonymic String
+  email String @unique 
+  password String
+  birthday DateTime @db.Date
+  phoneNumber String
+}
