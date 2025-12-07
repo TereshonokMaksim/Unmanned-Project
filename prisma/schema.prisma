@@ -76,8 +76,8 @@ model ProductForOrder {
     productId   Int
     order       Order @relation(fields: [orderId], references: [id])
     orderId     Int
-    count      Int
-    discound    Int
+    count       Int
+    discount    Int
 }
 
 model Category {
@@ -91,7 +91,7 @@ model ProductMainBlock {
     title        String
     description  String
     media        String
-    align       String 
+    align        String 
     orderNum     Int
 }
 
@@ -99,8 +99,8 @@ model ProductDetailData {
     id           Int      @id @default(autoincrement())
     name         String
     orderNum     Int
-    detailBlock  ProductMainBlock @relation(fields: [], references: [id])
-    
+    detailBlock  ProductMainBlock @relation(fields: [productMainBlockId], references: [id])
+    productMainBlockId Int
 }
 
 model ProductDetailBasic {
