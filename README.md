@@ -142,35 +142,6 @@ As this project has Frontend, it has API as well, so it can communicate with Bac
 
 
 ----------
-### PATCH /product/:id
--    description - update product
--      200 - Successfull request
--      {
--        id:"int"
--        count:"int"
--        discount:"int"
--        name:"string"
--        description:"string"
--        media:"string"
--      }
--    Errors:
--      400 - There is no required field
--      {
--        error:"string"
--      }
--      401 - no acces
--      {
--        error: string
--      }
--      404 - product not found
--      {
--        error: string
--      }
--      500 - Server Error
--      {
--        error:"string"
--      }
-
 
 ---------
 ### DELETE /product/:id
