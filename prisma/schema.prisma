@@ -33,9 +33,9 @@ model Location {
     active        Boolean   @default(true)
     city         String
     street       String
-    houseNum  String
-    flatNum   String
-    entranceNum  String
+    houseNum  Int
+    flatNum   Int
+    entranceNum  Int
     user      User @relation(fields: [userId], references: [id])
     userId    Int
 }
@@ -50,8 +50,8 @@ model Order {
     customerComment String
     deliveryMethod String
     paymentMethod String
-    totalPrice Int
-    totalDiscount Int
+    totalPrice Float
+    totalDiscount Float
     user      User @relation(fields: [userId], references: [id])
     userId    Int
     location  Location @relation(fields: [locationId], references: [id])   
@@ -62,10 +62,10 @@ model Product {
     id           Int      @id @default(autoincrement())
     name         String
     description  String
-    price        Int
+    price        Float
     category     Category @relation(fields: [categoryId], references: [id])
     categoryId   Int
-    discount     Int
+    discount     Float
     media      String
     count      Int
 }
@@ -77,7 +77,7 @@ model ProductForOrder {
     order       Order @relation(fields: [orderId], references: [id])
     orderId     Int
     count       Int
-    discount    Int
+    discount    Float
 }
 
 model Category {
