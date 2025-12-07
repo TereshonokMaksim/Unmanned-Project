@@ -13,3 +13,110 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+
+
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name String
+  surname String
+  partonymic String
+  email String @unique 
+  password String
+  birthday DateTime @db.Date
+  phoneNumber String
+}
+
+model Location {
+    id           Int      @id @default(autoincrement())
+    active        Boolean   @default(true)
+    city         String
+    street       String
+    houseNum  Int
+    flatNum   Int
+    entranceNum  Int
+    user      User @relation(fields: [userId], references: [id])
+    userId    Int
+}
+
+
+model Order {
+    id           Int      @id @default(autoincrement())
+    customerName String
+    castomerPatronymic String
+    customerPhoneNumber String
+    customerEmail String
+    customerComment String
+    deliveryMethod String
+    paymentMethod String
+    totalPrice Float
+    totalDiscount Float
+    user      User @relation(fields: [userId], references: [id])
+    userId    Int
+    location  Location @relation(fields: [locationId], references: [id])   
+    locationId Int
+}
+
+model Product {
+    id           Int      @id @default(autoincrement())
+    name         String
+    description  String
+    price        Float
+    category     Category @relation(fields: [categoryId], references: [id])
+    categoryId   Int
+    discount     Float
+    media      String
+    count      Int
+}
+
+model ProductForOrder {
+    id          Int      @id @default(autoincrement())
+    product     Product @relation(fields: [productId], references: [id])
+    productId   Int
+    order       Order @relation(fields: [orderId], references: [id])
+    orderId     Int
+    count       Int
+    discount    Float
+}
+
+model Category {
+    id           Int      @id @default(autoincrement())
+    name         String
+    icon         String
+}
+
+model ProductMainBlock {
+    id           Int      @id @default(autoincrement())
+    product      Product @relation(fields: [productId], references: [id])
+    productId    Int
+    title        String
+    description  String
+    media        String
+    align        String 
+    orderNum     Int
+}
+
+model ProductDetailData {
+    id           Int      @id @default(autoincrement())
+    name         String
+    orderNum     Int
+    detailBlock  ProductMainBlock @relation(fields: [productMainBlockId], references: [id])
+    productMainBlockId Int
+}
+
+model ProductDetailBasic {
+    id           Int      @id @default(autoincrement())
+    text         String
+    orderNum     Int
+    detailData  ProductDetailData @relation(fields: [productDetailDataId], references: [id])
+    productDetailDataId  Int
+}
+
+model ProductDetailBold {
+    id           Int      @id @default(autoincrement())
+    text         String
+    orderNum     Int
+    detailData  ProductDetailData @relation(fields: [productDetailDataId], references: [id])
+    productDetailDataId  Int
+}
