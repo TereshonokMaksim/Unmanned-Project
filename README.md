@@ -61,6 +61,87 @@ As this project has Frontend, it has API as well, so it can communicate with Bac
 - Actions - It allows user to perform many operations, starting from simple such as getting product page, up to creating whole order, according to info acquired from Backend.
 - Optimization - It has capabulities to allow Pagination and quick filter/sort options, so user can swiftly find the product they want.
 
+<details>
+<summary><b>Product Module</b></summary>
+
+<details>
+<summary><b>Return Types</b></summary>
+
+- __Product__
+```ts
+    {
+        id: number,
+        name: string,
+        description: string,
+        price: number,
+        discount: number,
+        media: string,
+        count: number
+    }
+```
+- __ErrorMessage__
+```ts
+    {
+        message: string
+    }
+```
+</details>
+
+---
+
+__GET /products/ - Gets all products__
+
+Query Table
+
+|  Parameter |  Type   |               Description                |
+|------------|---------|------------------------------------------|
+|    skip    | Integer |  Skips defined amount of first products  |
+|    take    | Integer |     Takes defined amount of products     |
+| categoryId | Integer | Gets only products from defined category |
+
+Status Code table
+
+| CODE |       Status Code     |    Returns   |     Description    |
+|------|-----------------------|--------------|--------------------|
+|  200 |           OK          | Product List | Request Successful |
+|  400 |       Bad Request     | ErrorMessage | Wrong skip or take |
+|  500 | Internal Server error | ErrorMessage | API Server crashed |
+
+
+
+__GET /products/id - Gets product by ID__
+
+| CODE |       Status Code     |    Returns   |           Description          |
+|------|-----------------------|--------------|--------------------------------|
+|  200 |           OK          |   Product    |       Request Successful       |
+|  400 |       Bad Request     | ErrorMessage |          Wrong ID data         |
+|  404 |        Not Found      | ErrorMessage | Product with that ID not found |
+|  500 | Internal Server error | ErrorMessage |       API Server crashed       |
+
+__POST /products/ - Creates product with data from body__
+
+Body should have same structure as Product without ID
+
+
+| CODE |       Status Code     |    Returns   |         Description         |
+|------|-----------------------|--------------|-----------------------------|
+|  201 |        Created        |   Product    |    Creation Successful      |
+|  401 |      Unathorized      | ErrorMessage | You need to login to create |
+|  422 | Unprocessable Content | ErrorMessage |       Wrong body data       |
+|  500 | Internal Server error | ErrorMessage |     API Server crashed      |
+
+__DELETE /products/id - Deletes products with ID__
+
+| CODE |       Status Code     |    Returns   |           Description          |
+|------|-----------------------|--------------|--------------------------------|
+|  200 |           OK          |   Product    |       Request Successful       |
+|  400 |      Bad Request      | ErrorMessage |          Wrong ID data         |
+|  401 |      Unathorized      | ErrorMessage |  You need to login to delete   |
+|  404 |       Not Found       | ErrorMessage | Product with that ID not found |
+|  500 | Internal Server error | ErrorMessage |       API Server crashed       |
+
+</details>
+
 ----
 
 # Additional
