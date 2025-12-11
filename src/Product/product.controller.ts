@@ -4,24 +4,24 @@ import { ProductControllerContract } from "./product.types";
 
 
 export const ProductController: ProductControllerContract = {
-    function async => {createProduct(ProductService: ProductService, req: Request, res: Response)} {
+    function createProduct: async => {req: Request, res: Response} {
             try {
                 const product = await ProductService.createProduct(req.body);
                 res.status(201).json(product);
             } catch (error) {
-                res.status(500).json({ error: 'Internal Server Error' });
+                res.status(500).json({ error: 'API Server crashed' });
             }
         };
     }
 
-    function async => {getAllProducts(ProductService: ProductService, req: Request, res: Response)} {
+    function getAllProducts: async (req: Request, res: Response) => {
             try {
                 const products = await ProductService.getAllProducts();
                 res.status(200).json(products);
             
             }
                 catch (error) {
-                    res.status(500).json({ error: 'Internal Server Error' });
+                    res.status(500).json({ error: 'API Server crashed' });
                 }};
             const take = +req.query.take
             const skip = +req.query.skip
@@ -29,7 +29,7 @@ export const ProductController: ProductControllerContract = {
                 res.status(400).json({message: " Wrong skip or take"})
                 return;
     }
-    function async => {getProductById(ProductService: ProductService, req: Request, res: Response)} {
+    function getProductById: async (req: Request, res: Response) => {
             try {
                 const id = +req.params.id
                 if (isNaN(id)){
@@ -43,21 +43,24 @@ export const ProductController: ProductControllerContract = {
                     res.status(404).json({ error: 'Product with that ID not found' });
                 }
             } catch (error) {
-                res.status(500).json({ error: 'Internal Server Error' });
+                res.status(500).json({ error: 'API Server crashed' });
             }
     }
-    function async => {deleteProduct(ProductService: ProductService, req: Request, res: Response)} {
+    function deleteProduct: async (req: Request, res: Response) => {
             try {
                 const id = +req.params.id
                 if (isNaN(id)){
                 res.status(400).json({message: "Id must be an Integer"})
                 return;
+                const take = +req.query.take
+                onst skip = +req.query.skip
+                if (isNaN(take) || isNaN(skip)){
+                    res.status(400).json({message: " Wrong skip or take"})
+                    return;
                 }
                 const success = await ProductService.deleteProductById(req.params.id);
                 try{
-                    if (success) {
-                        return Product
-                    } else{
+                    return
                 }} catch {
                     if (!success) {
                         res.status(404).json({ error: 'Product not found' });
@@ -66,7 +69,5 @@ export const ProductController: ProductControllerContract = {
                         res.status(400).json({error: 'Bad Request'})
                 }}
             } catch (error) {
-                res.status(500).json({ error: 'Internal Server Error' });
+                res.status(500).json({ error: 'API Server crashed' });
             }
-        };
-    }}
