@@ -8,7 +8,7 @@ import {client} from "../client/prismaClient"
 
 
 export const ProductRepository: ProductRepositoryContract = {
-    getAllProducts: async (take?): Promise<Product[]> => {
+    getAllProducts: async (take?) => {
         try {
             const products = await client.product.findMany({
                 take: take,

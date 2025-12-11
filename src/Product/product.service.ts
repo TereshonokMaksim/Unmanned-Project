@@ -15,7 +15,7 @@ export const ProductService: ProductServiceContract ={
         return ProductRepository.createProduct(data)
     },
     async deleteProduct(id) {
-        const product = await ProductRepository.deleteProduct(id);
+        const product = await ProductRepository.getProductById(id);
 
         if (!product){
             throw new Error("NOT_FOUND")
