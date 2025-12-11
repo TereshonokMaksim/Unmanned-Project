@@ -56,7 +56,7 @@ export const ProductController: ProductControllerContract = {
                 res.status(422).json({"message": "Wrong body data"})
                 return
             }
-            if (isNaN(body.price) || isNaN(body.discount) || isNaN(body.count) || isNaN(body.categoryId)){
+            if (isNaN(body.price) || isNaN(body.discount) || isNaN(body.count)){
                 res.status(422).json({"message": "Wrong body data"})
                 return
             }

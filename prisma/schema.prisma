@@ -5,7 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
+  engineType = "binary"
+  outputType = "esm"
   output   = "../src/generated/prisma"
 }
 
@@ -63,8 +65,8 @@ model Product {
   name              String
   description       String
   price             Float
-  category          Category           @relation(fields: [categoryId], references: [id])
-  categoryId        Int
+  category          Category?           @relation(fields: [categoryId], references: [id])
+  categoryId        Int?
   discount          Float
   media             String
   count             Int
