@@ -1,6 +1,6 @@
 import express ,{Router} from "express" 
-import ProductController from "./product.controller";
-import ProductService from "./product.service";
+import {ProductController} from "./product.controller";
+import {ProductService} from "./product.service";
 
 const router:Router = Router()
 

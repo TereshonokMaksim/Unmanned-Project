@@ -1,11 +1,14 @@
 import {Response, Request} from "express";
-import  {ProductControllerContract, ProductCreate, ProductServiceContract, ErrorMessage} from "./product.types";
+import  {ProductControllerContract, ProductCreate, ProductServiceContract, ErrorMessage, Product} from "./product.types";
 
 export class ProductController implements ProductControllerContract {
     private productService: ProductServiceContract;
     constructor(productService: ProductServiceContract) {
         this.productService = productService;
     }
+    getAllProducts: ((req: Request<void, Product[] | ErrorMessage, void, { skip?: string; take?: string; productCategory?: string; }>, res: Response<Product[] | ErrorMessage>) => void) | undefined;
+    getProductById: ((req: Request<{ id: string; }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => void) | undefined;
+    deleteProduct: ((req: Request<{ id: string; }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => void) | undefined;
 
     async createProduct(req: Request<object, string | ErrorMessage, ProductCreate>, res: Response<string | ErrorMessage>): Promise<void> {
         try {
@@ -52,3 +55,15 @@ export class ProductController implements ProductControllerContract {
             })
             .catch(() => res.status(500).json({ message: "Internal server error" }));
     }
+
+function getAllProducts(req: any, arg1: { prototype: globalThis.Request; }, res: any, arg3: { prototype: globalThis.Response; error(): globalThis.Response; json(data: any, init?: ResponseInit): globalThis.Response; redirect(url: string | URL, status?: number): globalThis.Response; }) {
+    throw new Error("Function not implemented.");
+}
+function getProductById(req: any, arg1: { prototype: globalThis.Request; }, res: any, arg3: { prototype: globalThis.Response; error(): globalThis.Response; json(data: any, init?: ResponseInit): globalThis.Response; redirect(url: string | URL, status?: number): globalThis.Response; }) {
+    throw new Error("Function not implemented.");
+}
+
+function deleteProduct(req: any, arg1: { prototype: globalThis.Request; }, res: any, arg3: { prototype: globalThis.Response; error(): globalThis.Response; json(data: any, init?: ResponseInit): globalThis.Response; redirect(url: string | URL, status?: number): globalThis.Response; }) {
+    throw new Error("Function not implemented.");
+}
+
