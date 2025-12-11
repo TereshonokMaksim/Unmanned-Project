@@ -1,10 +1,6 @@
 import { ProductRepository } from "./product.repository";
 import {
-    Product,
-    ProductCreate,
-    ErrorMessage,
     ProductServiceContract,
-    ProductRepositoryContract
 } from "./product.types";
 
 
@@ -18,7 +14,12 @@ export const ProductService: ProductServiceContract ={
     createProduct(data) {
         return ProductRepository.createProduct(data)
     },
-    deleteProduct(id) {
+    async deleteProduct(id) {
+        const product = await ProductRepository.deleteProduct(id);
+
+        if (!product){
+            throw new Error("NOT_FOUND")
+        }
         return ProductRepository.deleteProduct(id)
     },
     getProductsByCategory(categoryId) {
