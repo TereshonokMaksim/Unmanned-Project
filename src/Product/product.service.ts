@@ -5,8 +5,8 @@ import {
 
 
 export const ProductService: ProductServiceContract ={
-    getAllProducts: (take) =>{
-        return ProductRepository.getProduct(take)
+    getAllProducts: (take?) =>{
+        return ProductRepository.getAllProducts(take)
     },
     getProductById: (id) => {
         return ProductRepository.getProductById(id)

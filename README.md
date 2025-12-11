@@ -101,11 +101,11 @@ Query Table
 
 Status Code table
 
-| CODE |       Status Code     |    Returns   |     Description    |
-|------|-----------------------|--------------|--------------------|
-|  200 |           OK          | Product List | Request Successful |
-|  400 |       Bad Request     | ErrorMessage | Wrong skip or take |
-|  500 | Internal Server error | ErrorMessage | API Server crashed |
+| CODE |       Status Code     |    Returns   |       Description     |
+|------|-----------------------|--------------|-----------------------|
+|  200 |           OK          | Product List |   Request Successful  |
+|  400 |       Bad Request     | ErrorMessage |   Wrong skip or take  |
+|  500 | Internal Server error | ErrorMessage | Internal Server Error |
 
 
 
@@ -116,7 +116,7 @@ __GET /products/id - Gets product by ID__
 |  200 |           OK          |   Product    |       Request Successful       |
 |  400 |       Bad Request     | ErrorMessage |          Wrong ID data         |
 |  404 |        Not Found      | ErrorMessage | Product with that ID not found |
-|  500 | Internal Server error | ErrorMessage |       API Server crashed       |
+|  500 | Internal Server error | ErrorMessage |     Internal Server Error      |
 
 __POST /products/ - Creates product with data from body__
 
@@ -128,7 +128,7 @@ Body should have same structure as Product without ID
 |  201 |        Created        |   Product    |    Creation Successful      |
 |  401 |      Unathorized      | ErrorMessage | You need to login to create |
 |  422 | Unprocessable Content | ErrorMessage |       Wrong body data       |
-|  500 | Internal Server error | ErrorMessage |     API Server crashed      |
+|  500 | Internal Server error | ErrorMessage |   Internal Server Error     |
 
 __DELETE /products/id - Deletes products with ID__
 
@@ -138,7 +138,7 @@ __DELETE /products/id - Deletes products with ID__
 |  400 |      Bad Request      | ErrorMessage |          Wrong ID data         |
 |  401 |      Unathorized      | ErrorMessage |  You need to login to delete   |
 |  404 |       Not Found       | ErrorMessage | Product with that ID not found |
-|  500 | Internal Server error | ErrorMessage |       API Server crashed       |
+|  500 | Internal Server error | ErrorMessage |     Internal Server Error      |
 
 </details>
 
