@@ -1,69 +1,68 @@
-import {Response, Request} from "express";
-import  {ProductControllerContract, ProductCreate, ProductServiceContract, ErrorMessage, Product} from "./product.types";
+import { Request, Response } from "express";
+import { ProductService } from "./product.service";
 
-export class ProductController implements ProductControllerContract {
-    private productService: ProductServiceContract;
-    constructor(productService: ProductServiceContract) {
-        this.productService = productService;
-    }
-    getAllProducts: ((req: Request<void, Product[] | ErrorMessage, void, { skip?: string; take?: string; productCategory?: string; }>, res: Response<Product[] | ErrorMessage>) => void) | undefined;
-    getProductById: ((req: Request<{ id: string; }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => void) | undefined;
-    deleteProduct: ((req: Request<{ id: string; }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => void) | undefined;
 
-    async createProduct(req: Request<object, string | ErrorMessage, ProductCreate>, res: Response<string | ErrorMessage>): Promise<void> {
+
+export function createProductHandler(productService: ProductService) {
+    return async (req: Request, res: Response) => {
         try {
-            const productData: ProductCreate = req.body;
-            const newProduct = await this.productService.createProduct(productData);
-            if (newProduct) {
-                res.status(201).send("Product created successfully");
+            const product = await productService.createProduct(req.body);
+            res.status(201).json(product);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to create product' });
+        }
+    };
+}
+
+export function getAllProductsHandler(productService: ProductService) {
+    return async (req: Request, res: Response) => {
+        try {
+            try {
+                const products = await productService.getAllProducts();
+                res.status(200).json(products);
+            
+            }
+            catch (error) {
+                res.status(500).json({ error: 'Failed to retrieve products' });
+            }
+            
+        } catch (error) {
+                res.status(400).json({ error: 'Wrong skip or take' });
+            }
+    };
+}
+export function getProductByIdHandler(productService: ProductService) {
+    return async (req: Request, res: Response) => {
+        try {
+            const product = await productService.getProductById(req.params.id);
+            if (product) {
+                res.status(200).json(product);
             } else {
-                res.status(400).json({ message: "Failed to create product" });
+                res.status(404).json({ error: 'Product not found' });
             }
         } catch (error) {
-            res.status(500).json({ message: "Internal server error" });
+            res.status(500).json({ error: 'Failed to retrieve product' });
         }
-    }
+    };
+}
+export function deleteProductByIdHandler(productService: ProductService) {
+    return async (req: Request, res: Response) => {
+        try {
+            const success = await productService.deleteProductById(req.params.id);
+            if (success) {
+                res.status(200).json({ message: 'Product deleted successfully' });
+            } else {
+                res.status(404).json({ error: 'Product not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to delete product' });
+        }
+    };
 }
 
-    getAllProducts(req: Request<void, Product[] | ErrorMessage, void, { skip?: string, take?: string, productCategory?: string }>, res: Response<Product[] | ErrorMessage>): void {
-        const take = req.query.take ? parseInt(req.query.take) : undefined;
-        this.productService.getAllProducts(take)
-            .then(products => res.status(200).json(products))
-            .catch(() => res.status(500).json({ message: "Internal server error" }));
-    }
-    getProductById(req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>): void {
-        const id = parseInt(req.params.id);
-        this.productService.getProductById(id)
-            .then(product => {
-                if (product) {
-                    res.status(200).json(product);
-                } else {
-                    res.status(404).json({ message: "Product not found" });
-                }
-            })
-            .catch(() => res.status(500).json({ message: "Internal server error" }));
-    }
-    deleteProduct(req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>): void {
-        const id = parseInt(req.params.id);
-        this.productService.deleteProduct(id)
-            .then(deletedProduct => {
-                if (deletedProduct) {
-                    res.status(200).json(deletedProduct);
-                } else {
-                    res.status(404).json({ message: "Product not found" });
-                }
-            })
-            .catch(() => res.status(500).json({ message: "Internal server error" }));
-    }
-
-function getAllProducts(req: any, arg1: { prototype: globalThis.Request; }, res: any, arg3: { prototype: globalThis.Response; error(): globalThis.Response; json(data: any, init?: ResponseInit): globalThis.Response; redirect(url: string | URL, status?: number): globalThis.Response; }) {
-    throw new Error("Function not implemented.");
-}
-function getProductById(req: any, arg1: { prototype: globalThis.Request; }, res: any, arg3: { prototype: globalThis.Response; error(): globalThis.Response; json(data: any, init?: ResponseInit): globalThis.Response; redirect(url: string | URL, status?: number): globalThis.Response; }) {
-    throw new Error("Function not implemented.");
-}
-
-function deleteProduct(req: any, arg1: { prototype: globalThis.Request; }, res: any, arg3: { prototype: globalThis.Response; error(): globalThis.Response; json(data: any, init?: ResponseInit): globalThis.Response; redirect(url: string | URL, status?: number): globalThis.Response; }) {
-    throw new Error("Function not implemented.");
-}
-
+export const ProductController = {
+    createProduct: createProductHandler,
+    getAllProducts: getAllProductsHandler,
+    getProductById: getProductByIdHandler,
+    deleteProductById: deleteProductByIdHandler
+};
