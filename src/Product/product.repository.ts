@@ -1,5 +1,4 @@
 import {
-    Product,
     ProductCreate,
     ProductRepositoryContract
 } from "./product.types";
@@ -8,10 +7,11 @@ import {client} from "../client/prismaClient"
 
 
 export const ProductRepository: ProductRepositoryContract = {
-    getAllProducts: async (take?) => {
+    getAllProducts: async (take?, skip?) => {
         try {
             const products = await client.product.findMany({
                 take: take,
+                skip: skip
             });
             return products;
         } catch (error) {

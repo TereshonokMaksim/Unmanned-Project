@@ -9,14 +9,14 @@ export type Product = Prisma.ProductGetPayload<{}>
 export type ProductCreate = Prisma.ProductUncheckedCreateInput
 
 export interface ProductServiceContract {
-    getAllProducts(take?: number): Promise<Product[]>
+    getAllProducts(take?: number, skip?: number): Promise<Product[]>
     getProductById(id: number): Promise<Product | null>
     createProduct(data: ProductCreate): Promise<Product | null>
     deleteProduct(id: number): Promise<Product | null>
     getProductsByCategory(categoryId: number): Promise<Product[]> 
 } 
 export interface ProductRepositoryContract {
-    getAllProducts(take?: number): Promise<Product[]>
+    getAllProducts(take?: number, skip?: number): Promise<Product[]>
     getProductById(id: number): Promise<Product | null>
     createProduct(data:ProductCreate): Promise<Product>
     deleteProduct(id: number): Promise<Product | null>
