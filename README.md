@@ -141,6 +141,74 @@ __DELETE /products/id - Deletes products with ID__
 |  500 | Internal Server error | ErrorMessage |     Internal Server Error      |
 
 </details>
+<summary><b>Product Module</b></summary>
+
+<details>
+<summary><b>Return Types</b></summary>
+
+- __Category__
+```ts
+    {
+        id: number,
+        name: string,
+        icon: string
+    }
+```
+- __ErrorMessage__
+```ts
+    {
+        message: string
+    }
+```
+</details>
+
+
+__GET /categories/ - Gets all categories__
+
+Query Table
+
+|  Parameter |  Type   |                Description                 |
+|------------|---------|--------------------------------------------|
+|    skip    | Integer |  Skips defined amount of first categories  |
+|    take    | Integer |     Takes defined amount of categories     |
+
+Status Code table
+
+| CODE |       Status Code     |    Returns    |       Description     |
+|------|-----------------------|---------------|-----------------------|
+|  200 |           OK          | Category List |   Request Successful  |
+|  400 |       Bad Request     | ErrorMessage  |   Wrong skip or take  |
+|  500 | Internal Server error | ErrorMessage  | Internal Server Error |
+
+
+__POST /category/ - Creates product with data from body__
+
+Body should have same structure as Category without ID
+
+
+| CODE |       Status Code     |     Returns   |         Description         |
+|------|-----------------------|---------------|-----------------------------|
+|  201 |        Created        |   Category    |    Creation Successful      |
+|  401 |      Unathorized      |  ErrorMessage | You need to login to create |
+|  422 | Unprocessable Content |  ErrorMessage |       Wrong body data       |
+|  500 | Internal Server error |  ErrorMessage |   Internal Server Error     |
+
+__DELETE /categories/id - Deletes category with defined ID__
+
+| CODE |       Status Code     |    Returns    |           Description           |
+|------|-----------------------|---------------|---------------------------------|
+|  200 |           OK          |   Category    |       Request Successful        |
+|  400 |      Bad Request      | ErrorMessage  |          Wrong ID data          |
+|  401 |      Unathorized      | ErrorMessage  |  You need to login to delete    |
+|  404 |       Not Found       | ErrorMessage  | Category with that ID not found |
+|  500 | Internal Server error | ErrorMessage  |     Internal Server Error       |
+
+---
+
+<details>
+
+
+</details>
 
 ----
 

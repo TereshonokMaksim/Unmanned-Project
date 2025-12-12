@@ -1,9 +1,9 @@
-import { ProductControllerContract } from "./product.types";
-import { ProductService } from "./product.service";
+import { CategoryControllerContract } from "./category.types";
+import { CategoryService } from "./category.service";
 
 
-export const ProductController: ProductControllerContract = {
-    async getAllProducts(req, res){
+export const CategoryController: CategoryControllerContract = {
+    async getAllCategories(req, res){
         try{
             const take: string | undefined = req.query.take
             const skip: string | undefined = req.query.skip
@@ -30,68 +30,44 @@ export const ProductController: ProductControllerContract = {
                 }
                 cookedSkip = +skip
             }
-            res.status(200).json(await ProductService.getAllProducts(cookedTake, cookedSkip))
+            res.status(200).json(await CategoryService.getAllCategories(cookedTake, cookedSkip))
         }
         catch(error){
             res.status(500).json({"message": "Internal Server Error"})
-            console.log(`Unexpected error in getAllProducts -- Controller\nError:\n${error}`)
+            console.log(`Unexpected error in getAllCategories -- Controller\nError:\n${error}`)
         }
     },
-    async getProductById(req, res) {
-        try{
-            const id = req.params.id
-            if (isNaN(+id)){
-                res.status(400).json({"message": "Wrong ID data"})
-                return
-            }
-            if (+id != Math.round(+id)){
-                // Float number as id
-                res.status(400).json({"message": "Wrong ID data"})
-                return
-            }
-            const product = await ProductService.getProductById(+id)
-            if (!product){
-                res.status(404).json({"message": "Product with that ID not found"})
-                return
-            }
-            res.status(200).json(product)
-        }
-        catch(error){
-            res.status(500).json({"message": "Internal Server Error"})
-            console.log(`Unexpected error in getProductById -- Controller\nError:\n${error}`)
-        }
-    },
-    async createProduct(req, res) {
+    async createCategory(req, res) {
         try{
             const body = req.body
             if (!body){
                 res.status(422).json({"message": "Wrong body data"})
                 return
             }
-            if (isNaN(body.price) || isNaN(body.discount) || isNaN(body.count)){
+            if (!body.icon || !body.name){
                 res.status(422).json({"message": "Wrong body data"})
                 return
             }
             try{
-                const newProduct = await ProductService.createProduct(body)
-                if (!newProduct){
+                const newCategory = await CategoryService.createCategory(body)
+                if (!newCategory){
                     res.status(500).json({"message": "Internal Server Error"})
-                    console.log(`Unexpected error after creation of product in createProduct -- Controller\nNo additional error data provided.`)
+                    console.log(`Unexpected error after creation of category in createCategory -- Controller\nNo additional error data provided.`)
                     return
                 }
-                res.status(201).json(newProduct)
+                res.status(201).json(newCategory)
             }
             catch(error){
                 res.status(500).json({"message": "Internal Server Error"})
-                console.log(`Unexpected error while creating product in createProduct -- Controller\nError:\n${error}`)
+                console.log(`Unexpected error while creating category in createCategory -- Controller\nError:\n${error}`)
             }
         }
         catch(error){
             res.status(500).json({"message": "Internal Server Error"})
-            console.log(`Unexpected error in createProduct -- Controller\nError:\n${error}`)
+            console.log(`Unexpected error in createCategory -- Controller\nError:\n${error}`)
         }
     },
-    async deleteProduct(req, res) {
+    async deleteCategory(req, res) {
         try{
             const id = req.params.id
             if (isNaN(+id)){
@@ -99,32 +75,31 @@ export const ProductController: ProductControllerContract = {
                 return
             }
             if (+id != Math.round(+id)){
-                // Float number as id
                 res.status(400).json({"message": "Wrong ID data"})
                 return
             }
-            let deletedProduct;
+            let deletedCategory;
             try{
-                deletedProduct = await ProductService.deleteProduct(+id)
+                deletedCategory = await CategoryService.deleteCategory(+id)
             }
             catch(error){
                 if (error instanceof Error){
                     if (error.message == "NOT_FOUND"){
-                        res.status(404).json({"message": "Product with that ID not found"})
+                        res.status(404).json({"message": "Category with that ID not found"})
                         return 
                     }
                 }
                 throw error
             }
-            if (!deletedProduct){
-                res.status(404).json({"message": "Product with that ID not found"})
+            if (!deletedCategory){
+                res.status(404).json({"message": "Category with that ID not found"})
                 return
             }
-            res.status(200).json(deletedProduct)
+            res.status(200).json(deletedCategory)
         }
         catch(error){
             res.status(500).json({"message": "Internal Server Error"})
-            console.log(`Unexpected error in deleteProduct -- Controller\nError:\n${error}`)
+            console.log(`Unexpected error in deleteCategory -- Controller\nError:\n${error}`)
         }
     }
 }
