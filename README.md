@@ -4,12 +4,12 @@
 
 # Navigation
 
-- [Team](#team)
-- [Architecture](#code-architecture)
-- [Structure](#project-structure)
-- [API](#api)
-- [Additional: Code Style](#code-style)
-- [Additional: More Info](#more-info)
+- [Team](#team-)
+- [Architecture](#code-architecture-)
+- [Structure](#project-structure-)
+- [API](#api-)
+- [Additional: Code Style](#code-style-)
+- [Additional: More Info](#more-info-)
 
 -----
 
@@ -141,7 +141,9 @@ __DELETE /products/id - Deletes products with ID__
 |  500 | Internal Server error | ErrorMessage |     Internal Server Error      |
 
 </details>
-<summary><b>Product Module</b></summary>
+
+<details>
+<summary><b>Category Module</b></summary>
 
 <details>
 <summary><b>Return Types</b></summary>
@@ -162,6 +164,7 @@ __DELETE /products/id - Deletes products with ID__
 ```
 </details>
 
+---
 
 __GET /categories/ - Gets all categories__
 
@@ -204,9 +207,6 @@ __DELETE /categories/id - Deletes category with defined ID__
 |  500 | Internal Server error | ErrorMessage  |     Internal Server Error       |
 
 ---
-
-<details>
-
 
 </details>
 
