@@ -242,6 +242,81 @@ __DELETE /categories/id - Deletes category with defined ID__
 
 </details>
 
+
+<details>
+<summary><b>User Module</b></summary>
+
+<details>
+<summary><b>Return Types</b></summary>
+
+__User__
+```ts
+    id: number,
+    name: string,
+    surname: string,
+    patronymic: string,
+    email: string,
+    password: string,
+    birthday: string,
+    phoneNumber: string
+```
+
+__RegisterCreds__
+Register Credentials - data you need to send for registration
+```ts
+    email: string,
+    username: string,
+    password: string
+```
+
+__LogCreds__
+Login Credentials - data you need to send for login (authorization)
+```ts
+    email: string,
+    password: string
+```
+
+__AuthResponse__
+Contains JWT for user identification
+```ts
+    token: string
+```
+
+---
+
+</details>
+
+__POST /user/reg/ - Creates User with data from it's body (registration)__
+For password hashing bcryptjs is used
+
+| CODE |      Status Code      |    Returns    |         Description         |
+|------|-----------------------|---------------|-----------------------------|
+| 201  |      OK, created      | AuthResponse  | You successfully registered |
+| 400  |      Bad Request      | ErrorMessage  |   You entered wrong data    |
+| 500  | Internal Server error | ErrorMessage  |   Internal Server Error     |
+
+__POST /user/log/ - Checks provided user data and, if correct, logins him__
+
+| CODE |      Status Code      |    Returns   |         Description         |
+|------|-----------------------|--------------|-----------------------------|
+| 200  |          OK           | AuthResponse |   You successfully logined  |
+| 404  |       Not found       | ErrorMessage | Incorrect password or email |
+| 500  | Internal Server error | ErrorMessage |   Internal Server Error     |
+
+__GET /user/me/ - Gets user data by JWT token stored in Authorization Header__
+User is returned __without__ password
+
+| CODE |      Status Code      |    Returns   |         Description         |
+|------|-----------------------|--------------|-----------------------------|
+| 200  |          OK           |     User     |    You get data about you   |
+| 404  |       Not found       | ErrorMessage |    Incorrect JWT token      |
+| 500  | Internal Server error | ErrorMessage |    Internal Server Error    |
+
+---
+
+</details>
+
+
 ----
 
 # Additional
