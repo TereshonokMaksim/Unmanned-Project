@@ -28,7 +28,19 @@ export const ProductRepository: ProductRepositoryContract = {
     getProductById: async (id) => {
         try {
             const product = await client.product.findUnique({
-                where: { id }
+                where: { id },
+                include: {
+                    productMainBlocks: {
+                        include: {
+                            productDetailDatas: {
+                                include: {
+                                    productDetailBasics: true, 
+                                    productDetailBolds: true
+                                }
+                            }
+                        }
+                    }
+                }
             });
             return product;
         } catch (error) {
@@ -57,15 +69,64 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error;
         }
     },
-
-    getProductsByCategory: async (categoryId) => {
+    getProductsByCategory: async (categoryId, skip?, take?) => {
         try {
             const products = await client.product.findMany({
-                where: { categoryId }
+                where: { categoryId },
+                skip: skip,
+                take: take
             });
             return products;
         } catch (error) {
             throw error;
         }
-    }
+    },
+    createDetailBasicText: async (data) => {
+        try {
+            const newFontBlock = await client.productDetailBasic.create({
+                data: data
+            });
+            return newFontBlock;
+        } catch (error) {
+            throw error;
+        }
+    },
+    createDetailBoldText: async (data) => {
+        try {
+            return client.productDetailBold.create({data: data});
+        } catch (error) {
+            throw error;
+        }
+    },
+    createProductDetail: async (data) => {
+        try {
+            const newDetailBlock = await client.productDetailData.create({
+                data: data,
+                include: {
+                    productDetailBolds: true,
+                    productDetailBasics: true
+                }
+            });
+            return newDetailBlock;
+        } catch (error) {
+            throw error;
+        }
+    },
+    createProductBlock: async (data) => {
+        try {
+            return client.productMainBlock.create({
+                data: data, 
+                include: {
+                    productDetailDatas: {
+                        include: {
+                            productDetailBasics: true, 
+                            productDetailBolds: true
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
+    },
 };

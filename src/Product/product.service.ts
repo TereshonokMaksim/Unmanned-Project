@@ -22,7 +22,19 @@ export const ProductService: ProductServiceContract ={
         }
         return ProductRepository.deleteProduct(id)
     },
-    getProductsByCategory(categoryId) {
-        return ProductRepository.getProductsByCategory(categoryId)
+    getProductsByCategory(categoryId, skip?, take?) {
+        return ProductRepository.getProductsByCategory(categoryId, skip, take)
+    },
+    createDetailBasicText: async (data) => {
+        return ProductRepository.createDetailBasicText(data)
+    },
+    createDetailBoldText: async (data) => {
+        return ProductRepository.createDetailBasicText(data)
+    },
+    createProductBlock: async (data) => {
+        return ProductRepository.createProductBlock(data)
+    },
+    createProductDetail(data) {
+        return ProductRepository.createProductDetail(data)
     },
 }

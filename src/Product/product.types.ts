@@ -8,24 +8,72 @@ export interface ErrorMessage {
 export type Product = Prisma.ProductGetPayload<{}>
 export type ProductCreate = Prisma.ProductUncheckedCreateInput
 
+export type FontBlock = Prisma.ProductDetailBasicGetPayload<{}>
+export type FontBlockCreate = Prisma.ProductDetailBasicUncheckedCreateInput
+export type DetailFontBlockCreate = FontBlockCreate & {
+    bold: boolean
+}
+export type DetailData = Prisma.ProductDetailDataGetPayload<{include: {productDetailBasics: true, productDetailBolds: true}}>
+export type DetailDataInput = Prisma.ProductDetailDataUncheckedCreateInput
+export type DetailDataCreate = Prisma.ProductDetailDataGetPayload<{}> & {
+    detailBlocks?: DetailFontBlockCreate[]
+}
+export type ProductBlock = Prisma.ProductMainBlockGetPayload<{include: {productDetailDatas: true}}>
+export type ProductBlockInput = Prisma.ProductMainBlockUncheckedCreateInput
+export type FullProductBlock = Prisma.ProductMainBlockGetPayload<{
+    include: {
+        productDetailDatas: {
+            include: {
+                productDetailBasics: true, 
+                productDetailBolds: true
+            }
+        }
+    }
+}>
+export type ProductBlockCreate = Omit<FullProductBlock, "id">
+export type FullProduct = Prisma.ProductGetPayload<{
+    include: {
+        productMainBlocks: {
+            include: {
+                productDetailDatas: {
+                    include: {
+                        productDetailBasics: true, 
+                        productDetailBolds: true
+                    }
+                }
+            }
+        }
+    }
+}>
+
 export interface ProductServiceContract {
     getAllProducts(take?: number, skip?: number): Promise<Product[]>
-    getProductById(id: number): Promise<Product | null>
+    getProductById(id: number): Promise<FullProduct | null>
     createProduct(data: ProductCreate): Promise<Product | null>
     deleteProduct(id: number): Promise<Product | null>
-    getProductsByCategory(categoryId: number): Promise<Product[]> 
+    getProductsByCategory(categoryId: number, take?: number, skip?: number): Promise<Product[]> 
+    createProductBlock(data: ProductBlockInput): Promise<FullProductBlock>
+    createProductDetail(data: DetailDataInput): Promise<DetailData>
+    createDetailBasicText(data: FontBlockCreate): Promise<FontBlock>
+    createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
+    // amazing
 } 
 export interface ProductRepositoryContract {
     getAllProducts(take?: number, skip?: number): Promise<Product[]>
-    getProductById(id: number): Promise<Product | null>
+    getProductById(id: number): Promise<FullProduct | null>
     createProduct(data:ProductCreate): Promise<Product>
     deleteProduct(id: number): Promise<Product | null>
-    getProductsByCategory(categoryId: number): Promise<Product[]> 
+    getProductsByCategory(categoryId: number, take?: number, skip?: number): Promise<Product[]> 
+    createProductBlock(data: ProductBlockInput): Promise<FullProductBlock>
+    createProductDetail(data: DetailDataInput): Promise<DetailData>
+    createDetailBasicText(data: FontBlockCreate): Promise<FontBlock>
+    createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
 }
 
 export interface ProductControllerContract {
-    getAllProducts: (req: Request<void, Product[] | ErrorMessage, void, { skip?: string, take?: string, productCategory?: string }>, res: Response<Product[] | ErrorMessage>) => Promise<void>
-    getProductById: (req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => Promise<void>
+    getAllProducts: (req: Request<object, Product[] | ErrorMessage, void, { skip?: string, take?: string, productCategory?: string }>, res: Response<Product[] | ErrorMessage>) => Promise<void>
+    getProductById: (req: Request<{ id: string }, FullProduct | ErrorMessage>, res: Response<FullProduct | ErrorMessage>) => Promise<void>
     createProduct: (req: Request<object, Product | ErrorMessage, ProductCreate>, res: Response<Product | ErrorMessage>) => Promise<void>
     deleteProduct: (req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => Promise<void>
+    createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage>) => Promise<void>
 }
