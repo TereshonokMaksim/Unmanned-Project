@@ -85,6 +85,29 @@ As this project has Frontend, it has API as well, so it can communicate with Bac
         message: string
     }
 ```
+- __ProductBlock__
+```ts
+    {
+        description: string,
+        media: string,
+        productId: number,
+        title: string,
+        align: string,
+        orderNum: number,
+        productDetailDatas: {
+            name: string,
+            orderNum: number,
+            productDetailBasics: {
+                orderNum: number,
+                text: string
+            }[],
+            productDetailBolds: {
+                orderNum: number,
+                text: string
+            }[]
+        }[]
+    }
+```
 </details>
 
 ---
@@ -105,6 +128,7 @@ Status Code table
 |------|-----------------------|--------------|-----------------------|
 |  200 |           OK          | Product List |   Request Successful  |
 |  400 |       Bad Request     | ErrorMessage |   Wrong skip or take  |
+|  404 |       Not Found       | ErrorMessage | Wrong/Bad categoryId  |
 |  500 | Internal Server error | ErrorMessage | Internal Server Error |
 
 
@@ -139,6 +163,14 @@ __DELETE /products/id - Deletes products with ID__
 |  401 |      Unathorized      | ErrorMessage |  You need to login to delete   |
 |  404 |       Not Found       | ErrorMessage | Product with that ID not found |
 |  500 | Internal Server error | ErrorMessage |     Internal Server Error      |
+
+__POST /products/block/ - Creates info block for product__
+
+| CODE |      Status Code      |   Returns    |      Description      |
+|------|-----------------------|--------------|-----------------------|
+| 201  |      OK, created      | ProductBlock |   Creation Succesful  |
+| 400  |      Bad Request      | ErrorMessage |    Wrong body data    |
+| 500  | Internal Server Error | ErrorMessage | Internal Server Error |
 
 </details>
 

@@ -30,7 +30,16 @@ export const ProductController: ProductControllerContract = {
                 }
                 cookedSkip = +skip
             }
-            res.status(200).json(await ProductService.getAllProducts(cookedTake, cookedSkip))
+            const cat = req.query.productCategory 
+            if (!cat){
+                res.status(200).json(await ProductService.getAllProducts(cookedTake, cookedSkip))
+                return
+            }
+            if (isNaN(+cat)){ 
+                res.status(404).json({"message": "Wrong/Bad categoryId"})
+                return
+            }
+            res.status(200).json(await ProductService.getProductsByCategory(+cat, cookedTake, cookedSkip))
         }
         catch(error){
             res.status(500).json({"message": "Internal Server Error"})
@@ -125,6 +134,36 @@ export const ProductController: ProductControllerContract = {
         catch(error){
             res.status(500).json({"message": "Internal Server Error"})
             console.log(`Unexpected error in deleteProduct -- Controller\nError:\n${error}`)
+        }
+    },
+    async createInfoBlock(req, res) {
+        try{
+            const body = req.body
+            const POSSIBLE_ALIGNS = ["column", "row", "rowReversed"]
+            if (!body.description || !body.media || !POSSIBLE_ALIGNS.includes(body.align) || !body.orderNum || !body.productId){
+                res.status(422).json({"message": "Wrong body data"})
+                return
+            }
+            if (isNaN(body.productId) || isNaN(body.orderNum)){
+                res.status(422).json({"message": "Wrong body data"})
+                return
+            }
+            const block = await ProductService.createProductBlock({productId: body.productId, title: body.title, description: body.description, media: body.media, align: body.align, orderNum: body.orderNum})
+            for (let detailBlockData of body.productDetailDatas){
+                let currentDetail = await ProductService.createProductDetail({name: detailBlockData.name, orderNum: detailBlockData.orderNum, productMainBlockId: block.id}) 
+                block.productDetailDatas.push(currentDetail)
+                for (let fontData of detailBlockData.productDetailBasics){
+                    currentDetail.productDetailBasics.push(fontData)
+                }
+                for (let fontData of detailBlockData.productDetailBolds){
+                    currentDetail.productDetailBolds.push(fontData)
+                }
+            }
+            res.status(201).json(block)
+        }
+        catch(error){
+            res.status(500).json({"message": "Internal Server Error"})
+            console.log(`Unexpected error in createInfoBlock -- Controller\nError:\n${error}`)
         }
     }
 }
