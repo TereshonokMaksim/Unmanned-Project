@@ -19,15 +19,8 @@ export const UserController: UserControllerContract = {
         }
         catch(error){
             if (error instanceof Error){
-                // Debug part, delete before prod if you want to have normal console and not just spam in your console with "Wrong password :("
-                if (error.message == "NOT_FOUND"){
-                    console.log("Wrong email indeed")
-                }
-                else if (error.message == "WRONG_CREDENTIALS"){
-                    console.log("Wrong password :(")
-                } 
                 if (error.message == "NOT_FOUND" || error.message == "WRONG_CREDENTIALS"){
-                    res.status(400).json({message: "You entered wrong data"})
+                    res.status(404).json({message: "You entered wrong data"})
                     return
                 }
             }
@@ -61,7 +54,7 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
-            res.status(500).json({message: "Server is experiencing problems."})
+            res.status(500).json({message: "Internal Server Error"})
         }
     },
     async me(req, res){
@@ -72,11 +65,11 @@ export const UserController: UserControllerContract = {
         catch(error){
             if (error instanceof Error){
                 if (error.message == "NOT_FOUND"){
-                    res.status(404).json({message: "User with such ID does not exists!"})
+                    res.status(404).json({message: "Incorrect JWT token"})
                     return
                 }
             }
-            res.status(500).json({message: "Server is experiencing problems."})
+            res.status(500).json({message: "Internal Server Error"})
         }
     }
 }
