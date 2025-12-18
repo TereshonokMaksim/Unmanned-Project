@@ -7,28 +7,44 @@ export const UserController: UserControllerContract = {
         try {
             const data = req.body;
             if (!data.email) {
-                res.status(400).json({ message: "Email is required." });
+                res.status(400).json({ message: "You entered wrong data" });
                 return;
             }
             if (!data.password) {
-                res.status(400).json({ message: "Password is required." });
+                res.status(400).json({ message: "You entered wrong data" });
                 return;
             }
             const userToken = await UserService.login(data);
             res.status(200).json({ token: userToken });
         }
-        finally {
+        catch(error){
+            if (error instanceof Error){
+                // Debug part, delete before prod if you want to have normal console and not just spam in your console with "Wrong password :("
+                if (error.message == "NOT_FOUND"){
+                    console.log("Wrong email indeed")
+                }
+                else if (error.message == "WRONG_CREDENTIALS"){
+                    console.log("Wrong password :(")
+                } 
+                if (error.message == "NOT_FOUND" || error.message == "WRONG_CREDENTIALS"){
+                    res.status(400).json({message: "You entered wrong data"})
+                    return
+                }
+            }
+            res.status(500).json({message: "Internal Server Error"})
         }
     },
+
+
     async register(req, res){
         try{
             const data = req.body
             if (!data.email){
-                res.status(400).json({message: "Email is required"})
+                res.status(400).json({message: "You entered wrong data"})
                 return
             }
             if (!data.password){
-                res.status(400).json({message: "Password is required"})
+                res.status(400).json({message: "You entered wrong data"})
                 return
             }
             const newUserToken = await UserService.register(data)
@@ -37,15 +53,14 @@ export const UserController: UserControllerContract = {
         catch(error){
             if (error instanceof Error){
                 if (error.message == "USER_EXISTS"){
-                    res.status(409).json({message: "User with such email already exists!"})
+                    res.status(400).json({message: "You entered wrong data"})
                     return
                 }
                 else if (error.message == "WRONG_CREDENTIALS"){
-                    res.status(401).json({message: "Im not sure how you did this, but you inputted wrong data that passed."})
+                    res.status(400).json({message: "You entered wrong data"})
                     return
                 }
             }
-            console.log(`Seems like something went wrong somewhere in user auth system. And it is linked to registration, it appears to be.\n\nError:\n${error}`)
             res.status(500).json({message: "Server is experiencing problems."})
         }
     },
@@ -61,7 +76,6 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
-            console.log(`I seem to fail getting Myself as User object... Well, doesnt sound like my problem anyways!\n\nError\n${error}`)
             res.status(500).json({message: "Server is experiencing problems."})
         }
     }
