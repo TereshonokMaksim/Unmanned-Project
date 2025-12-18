@@ -45,5 +45,4 @@ export const UserService: UserServiceContract = {
         }
         return user
     }
-
 }    
