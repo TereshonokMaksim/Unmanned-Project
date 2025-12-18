@@ -1,8 +1,9 @@
-import express from "express";
-import { UserController } from "./user.controller";
+import { Router } from "express"
+import { UserController } from "./user.controller"
+import { meTokenMiddleware } from "../middlewares/meTokenMiddleware";
 
-export const UserRouter = express.Router();
+export const UserRouter = Router();
 
-UserRouter.post("/login", UserController.login)
-UserRouter.post("/register", UserController.register)
-UserRouter.get("/me", UserController.me)
+UserRouter.get('/me', meTokenMiddleware, UserController.me)
+UserRouter.post('/login', UserController.login)
+UserRouter.post('/register', UserController.register)
