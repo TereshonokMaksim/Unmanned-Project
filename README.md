@@ -256,7 +256,6 @@ __User__
     surname: string,
     patronymic: string,
     email: string,
-    password: string,
     birthday: string,
     phoneNumber: string
 ```
