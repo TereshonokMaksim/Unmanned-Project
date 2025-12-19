@@ -1,6 +1,8 @@
 import { AuthResponse, ErrorMessage, RegisterCreds, UserControllerContract } from "./user.types";
 import { UserService } from "./user.service";
 import { UserRepository } from "./user.repository";
+import { json } from "express";
+import { CODE_LENGTH } from "../config/passwordChangeData";
 
 
 export const UserController: UserControllerContract = {
@@ -21,7 +23,7 @@ export const UserController: UserControllerContract = {
         catch(error){
             if (error instanceof Error){
                 if (error.message == "NOT_FOUND" || error.message == "WRONG_CREDENTIALS"){
-                    res.status(404).json({message: "You entered wrong data"})
+                    res.status(404).json({message: "Wrong email or password"})
                     return
                 }
             }
@@ -66,23 +68,11 @@ export const UserController: UserControllerContract = {
         catch(error){
             if (error instanceof Error){
                 if (error.message == "NOT_FOUND"){
-                    res.status(404).json({message: "Incorrect JWT token"})
+                    res.status(404).json({message: "Data from JWT token is invalid"})
                     return
                 }
             }
             res.status(500).json({message: "Internal Server Error"})
-        }
-    },
-    async changePassword(request, response){
-        try{    
-            const body = request.body
-            if (!body.password){
-                response.status(400).json({message: "New password is missing"})
-            }
-            response.status(200).json({token: await UserService.changePassword(response.locals.userId, body.password)})
-        }
-        catch(error){
-            response.status(500).json({message: "Internal Server Error"})
         }
     },
     async editAccount(request, response){
@@ -97,6 +87,18 @@ export const UserController: UserControllerContract = {
     async createLocation(request, response) {
         try{
             const body = request.body
+            if (!body){
+                response.status(422).json({message: "Incorrect body data"})
+                return
+            }
+            if (!body.city || !body.entranceNum || !body.flatNum || !body.houseNum || !body.street){
+                response.status(422).json({message: "Incorrect body data"})
+                return
+            }
+            if (isNaN(body.entranceNum) || isNaN(body.flatNum) || isNaN(body.houseNum)){
+                response.status(422).json({message: "Incorrect body data"})
+                return
+            }
             response.status(200).json(await UserService.createLocation(body, response.locals.userId))
         }
         catch(error){
@@ -108,14 +110,33 @@ export const UserController: UserControllerContract = {
             const body = request.body
             const id = request.params.id
             if (isNaN(+id) || !id){
-                response.status(400).json({message: "Wrong id"})
+                response.status(400).json({message: "Invalid id"})
             }
-            response.status(200).json(await UserService.editLocation(+id, body))
+            if (body.entranceNum){
+                if (isNaN(body.entranceNum)){
+                    response.status(422).json({message: "Wrong body data"})
+                }
+            }
+            if (body.flatNum){
+                if (isNaN(body.flatNum)){
+                    response.status(422).json({message: "Wrong body data"})
+                }
+            }
+            if (body.houseNum){
+                if (isNaN(body.houseNum)){
+                    response.status(422).json({message: "Wrong body data"})
+                }
+            }
+            response.status(200).json(await UserService.editLocation(+id, body, response.locals.userId))
         }
         catch(error){
             if (error instanceof Error){
                 if (error.message == "NOT_FOUND"){
-                    response.status(404).json({message: "Location with that id is not found!"})
+                    response.status(404).json({message: "Address with that id is not found!"})
+                    return
+                }
+                if (error.message == "FORBIDDEN"){
+                    response.status(403).json({message: "It is not your address to edit."})
                     return
                 }
             }
@@ -126,14 +147,18 @@ export const UserController: UserControllerContract = {
         try{
             const id = request.params.id
             if (isNaN(+id) || !id){
-                response.status(400).json({message: "Wrong id"})
+                response.status(400).json({message: "Invalid id"})
             }
-            response.status(200).json(await UserService.deleteLocation(+id))
+            response.status(200).json(await UserService.deleteLocation(+id, response.locals.userId))
         }
         catch(error){
             if (error instanceof Error){
                 if (error.message == "NOT_FOUND"){
                     response.status(404).json({message: "Location with that id is not found!"})
+                    return
+                }
+                if (error.message == "FORBIDDEN"){
+                    response.status(403).json({message: "It is not your address to edit."})
                     return
                 }
             }
@@ -147,5 +172,63 @@ export const UserController: UserControllerContract = {
         catch(error){
             response.status(500).json({message: "Internal Server Error"})
         }
-    }
+    },
+    async startPasswordChange(request, response) {
+        try{
+            const newEmail = request.body.email
+            if (!newEmail){
+                response.status(400).json({message: "Email is not specified"})
+                return
+            }
+            await UserService.sendPasswordEmail(response.locals.userId, newEmail)
+            response.status(200).json("OK")
+        }
+        catch(error){
+            response.status(500).json({message: "Internal Server Error"})
+        }
+    },
+    async verifyPasswordCode(request, response) {
+        try{
+            const code = request.params.code
+            if (!code){
+                response.status(400).json({message: "You need to provide valid code"})
+                return
+            }
+            if (code.length != CODE_LENGTH){
+                response.status(400).json({message: "You need to provide valid code"})
+            }
+            response.status(200).json({success: await UserService.checkCode(response.locals.userId, code)})
+        }
+        catch(error){
+            if (error instanceof Error){
+                if (error.message == "NOT_FOUND"){
+                    response.status(404).json({message: "You didnt ask for restoration."})
+                    return
+                }
+            }
+            response.status(500).json({message: "Internal Server Error"})
+        }
+    },
+    async changePassword(request, response){
+        try{    
+            const body = request.body
+            if (!body.password){
+                response.status(400).json({message: "New password is missing"})
+            }
+            response.status(200).json({token: await UserService.changePassword(response.locals.userId, body.password)})
+        }
+        catch(error){
+            if (error instanceof Error){
+                if (error.message == "NOT_FOUND"){
+                    response.status(404).json({message: "You didnt ask for restoration."})
+                    return
+                }
+                if (error.message == "FORBIDDEN"){
+                    response.status(403).json({message: "You have not verified your email."})
+                    return
+                }
+            }
+            response.status(500).json({message: "Internal Server Error"})
+        }
+    },
 }
