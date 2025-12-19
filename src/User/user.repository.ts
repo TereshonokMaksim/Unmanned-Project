@@ -17,7 +17,8 @@ export const UserRepository: UserRepositoryContract = {
     async createUser(userData) {
         try {
             return client.user.create({
-                data: userData
+                data: userData,
+                omit: {password: true}
             })
         }
         catch (error) {

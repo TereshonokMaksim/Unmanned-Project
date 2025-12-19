@@ -55,7 +55,7 @@ export interface UserServiceContract {
 
 export interface UserRepositoryContract {
     getUserByEmail(email: string): Promise<User | null>
-    createUser(userData: UserCreate): Promise<User>
+    createUser(userData: UserCreate): Promise<UserSafe>
     getUserSafelyById(id: number): Promise<UserSafe | null>
     editUser(id: number, data: UserEdit): Promise<UserSafe>
     changePassword(id: number, newPassword: string): Promise<UserSafe>
