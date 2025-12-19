@@ -324,6 +324,15 @@ User is returned __without__ password
 | 404  |       Not found       | ErrorMessage |    Incorrect JWT token      |
 | 500  | Internal Server error | ErrorMessage |    Internal Server Error    |
 
+__PATCH /user/edit_acc - Allows to edit data__
+Data is required to be sent as UserEdit
+
+| CODE |      Status Code      |    Returns   |         Description         |
+|------|-----------------------|--------------|-----------------------------|
+| 200  |          OK           |     User     |       You get yourself      |
+| 404  |       Not found       | ErrorMessage |    Incorrect JWT token      |
+| 500  | Internal Server error | ErrorMessage |    Internal Server Error    |
+
 ---
 
 </details>
