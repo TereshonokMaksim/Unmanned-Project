@@ -132,8 +132,37 @@ Status Code table
 |  500 | Internal Server error | ErrorMessage | Internal Server Error |
 
 
+<details>
+<summary>Successful response example</summary>
 
-__GET /products/id - Gets product by ID__
+```json
+[
+    {
+        "name": "Uraninite",
+        "id": 52,
+        "description": "Little pieces of Uraninite for not so cheap price",
+        "price": 300,
+        "categoryId": 5,
+        "discount": 7,
+        "media": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Uraninite-usa32abg.jpg/250px-Uraninite-usa32abg.jpg",
+        "count": 1930,
+    },
+    {
+        "name": "Garnierite",
+        "id": 52,
+        "description": "Garnierite ore quality batches. Not really suitable for decorations (preview is not reference to actual product)",
+        "price": 15,
+        "categoryId": 9,
+        "discount": 0,
+        "media": "https://www.le-comptoir-geologique.com/_media/img/large/garnierite.webp",
+        "count": 1930,
+    }
+]
+```
+
+</details>
+
+__GET /products/*id* - Gets product by ID__
 
 | CODE |       Status Code     |    Returns   |           Description          |
 |------|-----------------------|--------------|--------------------------------|
@@ -142,10 +171,138 @@ __GET /products/id - Gets product by ID__
 |  404 |        Not Found      | ErrorMessage | Product with that ID not found |
 |  500 | Internal Server error | ErrorMessage |     Internal Server Error      |
 
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 2,
+    "name": "Yellowcake",
+    "description": "uhhh, is this even legal to sell online? Nah whatever.",
+    "price": 6000,
+    "categoryId": 2,
+    "discount": 499.99,
+    "media": "https://world-nuclear-news.org/images/articles/Yellowcake-U3O8-(Kazatomprom)-2018x.jpg",
+    "count": 5,
+    "productMainBlocks": [
+        {
+            "id": 1,
+            "productId": 2,
+            "title": "Pure testing",
+            "description": "Testing block number 1 lets go error wow who could have thought???",
+            "media": "https://geologyscience.com/wp-content/uploads/2023/04/139119964-torbernite-uranium-ore-from-margabal-mine-france-isolated-on-white-background.webp",
+            "align": "column",
+            "orderNum": 1,
+            "productDetailDatas": []
+        },
+        {
+            "id": 4,
+            "productId": 2,
+            "title": "Pure form of testing",
+            "description": "Testing block number 2 lets go one error is behind us its much better than i imagined",
+            "media": "https://geologyscience.com/wp-content/uploads/2023/04/139119964-torbernite-uranium-ore-from-margabal-mine-france-isolated-on-white-background.webp",
+            "align": "rowReversed",
+            "orderNum": 1,
+            "productDetailDatas": [
+                {
+                    "id": 2,
+                    "name": "of tests",
+                    "orderNum": 1,
+                    "productMainBlockId": 4,
+                    "productDetailBasics": [],
+                    "productDetailBolds": []
+                },
+                {
+                    "id": 3,
+                    "name": "uranium quality",
+                    "orderNum": 1,
+                    "productMainBlockId": 4,
+                    "productDetailBasics": [],
+                    "productDetailBolds": []
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "productId": 2,
+            "title": "Pure form of testing",
+            "description": "Testing block number 2 lets go one error is behind us its much better than i imagined",
+            "media": "https://geologyscience.com/wp-content/uploads/2023/04/139119964-torbernite-uranium-ore-from-margabal-mine-france-isolated-on-white-background.webp",
+            "align": "rowReversed",
+            "orderNum": 1,
+            "productDetailDatas": [
+                {
+                    "id": 4,
+                    "name": "of tests",
+                    "orderNum": 1,
+                    "productMainBlockId": 5,
+                    "productDetailBasics": [],
+                    "productDetailBolds": []
+                },
+                {
+                    "id": 5,
+                    "name": "uranium quality",
+                    "orderNum": 1,
+                    "productMainBlockId": 5,
+                    "productDetailBasics": [],
+                    "productDetailBolds": []
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "productId": 2,
+            "title": "Quality control",
+            "description": "yeah we dont have that",
+            "media": "https://upload.wikimedia.org/wikipedia/commons/8/8f/BlueRingwoodite.jpg",
+            "align": "column",
+            "orderNum": 2,
+            "productDetailDatas": [
+                {
+                    "id": 6,
+                    "name": "of optimization",
+                    "orderNum": 1,
+                    "productMainBlockId": 6,
+                    "productDetailBasics": [],
+                    "productDetailBolds": []
+                },
+                {
+                    "id": 7,
+                    "name": "ringwoodite purity",
+                    "orderNum": 1,
+                    "productMainBlockId": 6,
+                    "productDetailBasics": [],
+                    "productDetailBolds": []
+                }
+            ]
+        }
+    ]
+}
+```
+
+</details>
+
 __POST /products/ - Creates product with data from body__
 
 Body should have same structure as Product without ID
 
+
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "name": "Fresh Sulfur",
+    "description": "Acquired from volcano 2 hours ago. Its still hot.",
+    "price": 56,
+    "categoryId": 1,
+    "discount": 1.99,
+    "media": "https://encrypted-tbn0.gstatic.com/images,q=tbn:ANd9GcTLlW_LaUE6Lk_5grfKbk0UlLV6TIWjIhA3hA&s",
+    "count": 2
+}
+```
+
+</details>
 
 | CODE |       Status Code     |    Returns   |         Description         |
 |------|-----------------------|--------------|-----------------------------|
@@ -154,7 +311,25 @@ Body should have same structure as Product without ID
 |  422 | Unprocessable Content | ErrorMessage |       Wrong body data       |
 |  500 | Internal Server error | ErrorMessage |   Internal Server Error     |
 
-__DELETE /products/id - Deletes products with ID__
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 12,
+    "name": "Fresh Sulfur",
+    "description": "Acquired from volcano 2 hours ago. Its still hot.",
+    "price": 56,
+    "categoryId": 1,
+    "discount": 1.99,
+    "media": "https://encrypted-tbn0.gstatic.com/images,q=tbn:ANd9GcTLlW_LaUE6Lk_5grfKbk0UlLV6TIWjIhA3hA&s",
+    "count": 2
+}
+```
+
+</details>
+
+__DELETE /products/*id* - Deletes products with ID__
 
 | CODE |       Status Code     |    Returns   |           Description          |
 |------|-----------------------|--------------|--------------------------------|
@@ -164,13 +339,98 @@ __DELETE /products/id - Deletes products with ID__
 |  404 |       Not Found       | ErrorMessage | Product with that ID not found |
 |  500 | Internal Server error | ErrorMessage |     Internal Server Error      |
 
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 12,
+    "name": "Cobaltite",
+    "description": "Big chunk of cobaltite with estimated 61% purity. Mined in Germany.",
+    "price": 290,
+    "categoryId": 9,
+    "discount": 9.99,
+    "media": "https://ars.els-cdn.com/content/image/3-s2.0-B9780128020418000018-f01-18-9780128020418.jpg",
+    "count": 20
+}
+```
+</details>
+
 __POST /products/block/ - Creates info block for product__
+
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "description": "Our Granite is of the highest quality, mined with advanced tools and enhanced accuracy, to ensure, stability and beauty of your rock.",
+    "media": "https://preview.redd.it/f86zncthtfy51.jpg?width=1080&crop=smart&auto=webp&s=a8cd2292c15a69e46a1e715f7ea185e065cfeb6a",
+    "productId": 221,
+    "title": "Pure form of Rock",
+    "align": "row",
+    "orderNum": 1,
+    "productDetailDatas": [{
+        "name": "of polishing",
+        "orderNum": 1,
+        "productDetailBasics": [{
+            "orderNum": 1,
+            "text": "5 hours"
+        }],
+        "productDetailBolds": []
+    },
+    {
+        "name": "of natural rock",
+        "orderNum": 2,
+        "productDetailBasics": [],
+        "productDetailBolds": [{
+            "orderNum": 1,
+            "text": "100%"
+        }]
+    }]
+}
+```
+</details>
 
 | CODE |      Status Code      |   Returns    |      Description      |
 |------|-----------------------|--------------|-----------------------|
 | 201  |      OK, created      | ProductBlock |   Creation Succesful  |
 | 400  |      Bad Request      | ErrorMessage |    Wrong body data    |
 | 500  | Internal Server Error | ErrorMessage | Internal Server Error |
+
+<details>
+<summary>Successful response Example</summary>
+
+```json
+{
+    "id": 132790,
+    "description": "Our Granite is of the highest quality, mined with advanced tools and enhanced accuracy, to ensure, stability and beauty of your rock.",
+    "media": "https://preview.redd.it/f86zncthtfy51.jpg?width=1080&crop=smart&auto=webp&s=a8cd2292c15a69e46a1e715f7ea185e065cfeb6a",
+    "productId": 221,
+    "title": "Pure form of Rock",
+    "align": "row",
+    "orderNum": 1,
+    "productDetailDatas": [{
+        "name": "of polishing",
+        "orderNum": 1,
+        "productDetailBasics": [{
+            "orderNum": 1,
+            "text": "5 hours"
+        }],
+        "productDetailBolds": []
+    },
+    {
+        "name": "of natural rock",
+        "orderNum": 2,
+        "productDetailBasics": [],
+        "productDetailBolds": [{
+            "orderNum": 1,
+            "text": "100%"
+        }]
+    }]
+}
+```
+</details>
 
 </details>
 
@@ -215,20 +475,69 @@ Status Code table
 |  400 |       Bad Request     | ErrorMessage  |   Wrong skip or take  |
 |  500 | Internal Server error | ErrorMessage  | Internal Server Error |
 
+<details>
+<summary>Successful response example</summary>
+
+```json
+[
+    {
+        "name": "Uranium",
+        "id": 5,
+        "icon": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Uranium_ore_square.jpg"
+    },
+    {
+        "name": "Ores",
+        "id": 9,
+        "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Psilomelane-167850.jpg/250px-Psilomelane-167850.jpg"
+    },
+    {
+        "name": "Sulfur",
+        "id": 1,
+        "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Sulfur-sample.jpg/1200px-Sulfur-sample.jpg"
+    }
+]
+```
+
+</details>
 
 __POST /category/ - Creates product with data from body__
 
 Body should have same structure as Category without ID
 
+<details>
+<summary>Successful request Example</summary>
 
-| CODE |       Status Code     |     Returns   |         Description         |
-|------|-----------------------|---------------|-----------------------------|
-|  201 |        Created        |   Category    |    Creation Successful      |
-|  401 |      Unathorized      |  ErrorMessage | You need to login to create |
-|  422 | Unprocessable Content |  ErrorMessage |       Wrong body data       |
-|  500 | Internal Server error |  ErrorMessage |   Internal Server Error     |
+```json
+{
+    "name": "Kyber",   
+    "icon": "https://static.wikia.nocookie.net/starwars/images/5/5f/LightsaberCrystal-SWE.png/revision/latest?cb=20160911062335"
+}
+```
 
-__DELETE /categories/id - Deletes category with defined ID__
+</details>
+
+
+| CODE |       Status Code     |    Returns   |         Description         |
+|------|-----------------------|--------------|-----------------------------|
+|  201 |        Created        |   Category   |    Creation Successful      |
+|  401 |      Unathorized      | ErrorMessage | You need to login to create |
+|  422 | Unprocessable Content | ErrorMessage |       Wrong body data       |
+|  500 | Internal Server error | ErrorMessage |   Internal Server Error     |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 3,
+    "name": "Kyber",   
+    "icon": "https://static.wikia.nocookie.net/starwars/images/5/5f/LightsaberCrystal-SWE.png/revision/latest?cb=20160911062335"
+}
+```
+
+</details>
+
+__DELETE /categories/*id* - Deletes category with defined ID__
 
 | CODE |       Status Code     |    Returns    |           Description           |
 |------|-----------------------|---------------|---------------------------------|
@@ -237,6 +546,20 @@ __DELETE /categories/id - Deletes category with defined ID__
 |  401 |      Unathorized      | ErrorMessage  |  You need to login to delete    |
 |  404 |       Not Found       | ErrorMessage  | Category with that ID not found |
 |  500 | Internal Server error | ErrorMessage  |     Internal Server Error       |
+
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "name": "Domestic Drones",   
+    "id": 1,
+    "icon": "https://www.army-technology.com/wp-content/uploads/sites/3/2019/06/4l-image-Predator-B-MQ-9-Reaper.jpg"
+}
+```
+
+</details>
 
 ---
 
@@ -300,37 +623,390 @@ Contains all possible data that can be edited in User
 __POST /user/reg/ - Creates User with data from it's body (registration)__
 For password hashing bcryptjs is used
 
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "name": "Danilo",
+    "email": "tetrahedron@gmail.com", 
+    "password": "FlexingO42"
+}
+```
+</details>
+
 | CODE |      Status Code      |    Returns    |         Description         |
 |------|-----------------------|---------------|-----------------------------|
 | 201  |      OK, created      | AuthResponse  | You successfully registered |
 | 400  |      Bad Request      | ErrorMessage  |   You entered wrong data    |
 | 500  | Internal Server error | ErrorMessage  |   Internal Server Error     |
 
-__POST /user/log/ - Checks provided user data and, if correct, logins him__
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "token": "eyJhbGciOiJIUzI1FeIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY2MTYwMzU1LCJleHAiOjE3NjY3NjUxOTV9.OgijkTPao4x4UC40Fbiz8lHLgWJ-Uw9kWBOSAhHE27s"
+}
+```
+
+</details>
+
+__POST /user/log/ - Checks provided user data and, if correct, provides JWT authentication__
+
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "email": "myown.email@gmail.com",
+    "password": "FriedPotato7"
+}
+```
+</details>
 
 | CODE |      Status Code      |    Returns   |         Description         |
 |------|-----------------------|--------------|-----------------------------|
 | 200  |          OK           | AuthResponse |   You successfully logined  |
-| 404  |       Not found       | ErrorMessage | Incorrect password or email |
+| 404  |       Not found       | ErrorMessage |   Wrong email or password   |
 | 500  | Internal Server error | ErrorMessage |   Internal Server Error     |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "token": "eyJhbGciOiJIUzI1FeIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY2MTYwMzU1LCJleHAiOjE3NjY3NjUxOTV9.OgijkTPao4x4UC40Fbiz8lHLgWJ-Uw9kWBOSAhHE27s"
+}
+```
+
+</details>
 
 __GET /user/me/ - Gets user data by JWT token stored in Authorization Header__
 User is returned __without__ password
 
-| CODE |      Status Code      |    Returns   |         Description         |
-|------|-----------------------|--------------|-----------------------------|
-| 200  |          OK           |     User     |    You get data about you   |
-| 404  |       Not found       | ErrorMessage |    Incorrect JWT token      |
-| 500  | Internal Server error | ErrorMessage |    Internal Server Error    |
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "name": "Nikit",
+    "surname": "Bandera", 
+    "partonymic": "Sertonovich", 
+    "email": "seriousman@gmail.com",
+    "password": "NoPassword",
+    "birthday": "18.09.2025",
+    "phoneNumber": "112"
+}
+```
+</details>
+
+| CODE |      Status Code      |    Returns   |            Description           |
+|------|-----------------------|--------------|----------------------------------|
+| 200  |          OK           |     User     |     You get data about you       |
+| 401  |      Unathorized      | ErrorMessage |          Incorrect JWT           |
+| 404  |       Not found       | ErrorMessage |    Data from JWT is invalid      |
+| 500  | Internal Server error | ErrorMessage |      Internal Server Error       |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 45,
+    "name": "Artem",
+    "surname": "Neforget",
+    "partonymic": "Sergeyev",
+    "email": "actual.email@gmail.com",
+    "birthday": "29.07.2025",
+    "phoneNumber": "044-202-60-39",
+    "isAdmin": true
+}
+```
+
+</details>
 
 __PATCH /user/edit_acc - Allows to edit data__
 Data is required to be sent as UserEdit
 
-| CODE |      Status Code      |    Returns   |         Description         |
-|------|-----------------------|--------------|-----------------------------|
-| 200  |          OK           |     User     |       You get yourself      |
-| 404  |       Not found       | ErrorMessage |    Incorrect JWT token      |
-| 500  | Internal Server error | ErrorMessage |    Internal Server Error    |
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "surname": "Fedora", 
+    "email": "Berilium@gmail.com",
+    "password": "xXxCoolPasswordxXx",
+    "phoneNumber": "102"
+}
+```
+</details>
+
+| CODE |      Status Code      |    Returns   |            Description           |
+|------|-----------------------|--------------|----------------------------------|
+| 200  |          OK           |   UserSafe   |        You get yourself          |
+| 401  |      Unathorized      | ErrorMessage |          Incorrect JWT           |
+| 404  |       Not found       | ErrorMessage |    Data from JWT is invalid      |
+| 500  | Internal Server error | ErrorMessage |      Internal Server Error       |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 52,
+    "name": "Olexander",
+    "surname": "Adlaways",
+    "partonymic": "Antonov",
+    "email": "worldit@gmail.com",
+    "birthday": "14.07.2025",
+    "phoneNumber": "098-934-1899",
+    "isAdmin": true
+}
+```
+
+</details>
+
+__POST /user/change_password - Allows to start process of changing password__
+
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "email": "itismyemail@gmail.com"
+}
+```
+</details>
+
+| CODE |      Status Code      |    Returns   |           Description            |
+|------|-----------------------|--------------|----------------------------------|
+| 200  |          OK           |     "OK"     | You have started password change |
+| 400  |      Bad Request      | ErrorMessage |      Email is not specified      |
+| 401  |      Unathorized      | ErrorMessage |           Incorrect JWT          |
+| 500  | Internal Server error | ErrorMessage |      Internal Server Error       |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "token": "eyJhbGcCgiOiJIUzI1FeIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IysoNzY2MTYwMzU1LCJleHAiOjE3NjY3NjUxOTV9.OgijkTPao4x4UC40Fbiz8lHLgWJ-Uw9kWBOSAhHE27s"
+}
+```
+
+</details>
+
+__GET /user/change_password/*code* - Verifies user password change with provided CODE__
+
+| CODE |      Status Code      |         Returns        |             Description             |
+|------|-----------------------|------------------------|-------------------------------------|
+| 200  |          OK           | PasswordChangeResponse |  You get whether your code is true  |
+| 400  |      Bad Request      |      ErrorMessage      |      You provided invalid code      |
+| 401  |      Unathorized      |      ErrorMessage      |           Incorrect JWT             |
+| 404  |       Not found       |      ErrorMessage      | You didn't ask for restoration code |
+| 500  | Internal Server error |      ErrorMessage      |       Internal Server Error         |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "success": true
+}
+```
+
+</details>
+
+__PATCH /user/change_password - Sets new user password__
+
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "password": "VerySecurePassword"
+}
+```
+</details>
+
+| CODE |      Status Code      |    Returns   |             Description             |
+|------|-----------------------|--------------|-------------------------------------|
+| 200  |          OK           | AuthResponse |           You get new JWT           |
+| 400  |      Bad Request      | ErrorMessage |       New password is missing       |
+| 401  |      Unathorized      | ErrorMessage |           Incorrect JWT             |
+| 403  |       Forbidden       | ErrorMessage |       Email is not verified         |
+| 404  |       Not found       | ErrorMessage | You didn't ask for restoration code |
+| 500  | Internal Server error | ErrorMessage |       Internal Server Error         |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+"OK"
+```
+
+</details>
+
+__POST /user/address - Creates new Address (location)__
+
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "city": "Dnipro",
+    "street": "Izmailska",
+    "houseNum": 63,
+    "flatNum": 1,
+    "entranceNum": 2
+}
+```
+</details>
+
+| CODE |       Status Code     |     Returns   |         Description         |
+|------|-----------------------|---------------|-----------------------------|
+|  201 |        Created        |   Address     |    Creation Successful      |
+|  401 |      Unathorized      |  ErrorMessage | You need to login to create |
+|  422 | Unprocessable Content |  ErrorMessage |     Incorrect body data     |
+|  500 | Internal Server error |  ErrorMessage |    Internal Server Error    |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 2,
+    "active": true,
+    "city": "Dnipro",
+    "street": "Izmailska",
+    "houseNum": 63,
+    "flatNum": 1,
+    "entranceNum": 2,
+    "userId": 52
+}
+```
+
+</details>
+
+__PATCH /user/address/*id* - Edits address with provided ID__
+
+<details>
+<summary>Successful request Example</summary>
+
+```json
+{
+    "active": true,
+    "houseNum": 3,
+    "flatNum": 2
+}
+```
+</details>
+
+| CODE |      Status Code      |    Returns   |               Description               |
+|------|-----------------------|--------------|-----------------------------------------|
+| 200  |          OK           |   Address    |           You get yourself              |
+| 400  |      Bad Request      | ErrorMessage |               Invalid ID                |
+| 401  |      Unathorized      | ErrorMessage |       You need to login to delete       |
+| 403  |       Forbidden       | ErrorMessage | You cannot delete somebody else address |
+| 404  |       Not found       | ErrorMessage |    Address with that id is not found    |
+| 422  | Unprocessable Content | ErrorMessage |             Wrong body data             |
+| 500  | Internal Server error | ErrorMessage |         Internal Server Error           |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 1,
+    "active": true,
+    "city": "Dnipro",
+    "street": "Pobedy 118",
+    "houseNum": 3,
+    "flatNum": 2,
+    "entranceNum": 5,
+    "userId": 201
+}
+```
+
+</details>
+
+__DELETE /user/address/*id* - Deletes address with provided ID__
+
+| CODE |       Status Code     |    Returns   |              Description              |
+|------|-----------------------|--------------|---------------------------------------|
+|  200 |           OK          |    Address   |          Request Successful           |
+|  400 |      Bad Request      | ErrorMessage |             Wrong ID data             |
+|  401 |      Unathorized      | ErrorMessage |     You need to login to delete       |
+|  403 |       Forbidden       | ErrorMessage | You cannot edit somebody else address |
+|  404 |       Not Found       | ErrorMessage |    Category with that ID not found    |
+|  500 | Internal Server error | ErrorMessage |        Internal Server Error          |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "id": 221,
+    "active": true,
+    "city": "Dnipro",
+    "street": "Naberezhnaya",
+    "houseNum": 103,
+    "flatNum": 12,
+    "entranceNum": 9,
+    "userId": 19390
+}
+```
+
+</details>
+
+__GET /user/address - Gets all user's addresses__
+
+| CODE |       Status Code     |    Returns   |               Description               |
+|------|-----------------------|--------------|-----------------------------------------|
+|  200 |           OK          |   Addresses  |         You get your addresses          |
+|  401 |      Unathorized      | ErrorMessage | You need to login to get your addresses |
+|  500 | Internal Server error | ErrorMessage |          Internal Server Error          |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+[
+    {
+        "id": 252,
+        "active": false,
+        "city": "Dnipro",
+        "street": "Krivoy Rog Street",
+        "houseNum": 1,
+        "flatNum": 1,
+        "entranceNum": 1,
+        "userId": 1939029
+    },
+    {
+        "id": 253,
+        "active": true,
+        "city": "Dnipro",
+        "street": "April 10th Square",
+        "houseNum": 13,
+        "flatNum": 120,
+        "entranceNum": 91,
+        "userId": 1939029
+    },
+    {
+        "id": 9179,
+        "active": false,
+        "city": "Marynka",
+        "street": "Druzhba 30th Square",
+        "houseNum": 1,
+        "flatNum": 3,
+        "entranceNum": 2,
+        "userId": 1939029
+    },
+]
+```
+
+</details>
 
 ---
 

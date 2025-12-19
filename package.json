@@ -21,11 +21,13 @@
     "envalid": "^8.1.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^7.0.11",
     "prisma": "^6.17.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10"
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/nodemailer": "^7.0.4"
   }
 }

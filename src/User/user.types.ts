@@ -21,22 +21,31 @@ export interface AuthResponse{
     token: string
 }
 
+export interface PasswordChangeResponse{
+    success: boolean
+}
+
 export type Location = Prisma.LocationGetPayload<{}>  
 export type LocationCreate = Prisma.LocationCreateInput
 export type LocationEdit = Partial<Omit<Location, "id" | "userId">>
+
+export type AuthMiddlewareLocals = {userId: number}
 
 export type UserCreate = Prisma.UserCreateInput
 export interface UserControllerContract {
     login(request: Request<object, ErrorMessage | AuthResponse, LogCreds>, response: Response<ErrorMessage | AuthResponse>): Promise<void>;
     register(request: Request<object, ErrorMessage | AuthResponse, RegisterCreds>, response: Response<ErrorMessage | AuthResponse>): Promise<void>;
-    me(request: Request<object, ErrorMessage | UserSafe, object, object, {userId: number}>, response: Response<ErrorMessage | UserSafe, {userId: number}>): Promise<void>;
-    editAccount(request: Request<object, ErrorMessage | UserSafe, UserEdit, object, {userId: number}>, response: Response<ErrorMessage | UserSafe, {userId: number}>): Promise<void>;
-    changePassword(request: Request<object, ErrorMessage | AuthResponse, {password: string}, object, {userId: number}>, response: Response<ErrorMessage | AuthResponse, {userId: number}>): Promise<void>;
+    me(request: Request<object, ErrorMessage | UserSafe, object, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | UserSafe, AuthMiddlewareLocals>): Promise<void>;
+    editAccount(request: Request<object, ErrorMessage | UserSafe, UserEdit, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | UserSafe, AuthMiddlewareLocals>): Promise<void>;
+    // Password change part
+    changePassword(request: Request<object, ErrorMessage | AuthResponse, {password: string}, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | AuthResponse, AuthMiddlewareLocals>): Promise<void>;
+    startPasswordChange(request: Request<object, ErrorMessage | "OK", {email: string}, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | "OK", AuthMiddlewareLocals>): Promise<void>;
+    verifyPasswordCode(request: Request<{code: string}, ErrorMessage | PasswordChangeResponse, object, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | PasswordChangeResponse, AuthMiddlewareLocals>): Promise<void>;
     // Location part
-    createLocation(request: Request<object, ErrorMessage | Location, LocationCreate, object, {userId: number}>, response: Response<ErrorMessage | Location, {userId: number}>): Promise<void>;
-    editLocation(request: Request<{id: string}, ErrorMessage | Location, LocationEdit>, response: Response<ErrorMessage | Location>): Promise<void>;
-    deleteLocation(request: Request<{id: string}, ErrorMessage | Location>, response: Response<ErrorMessage | Location>): Promise<void>;
-    getLocations(request: Request<object, ErrorMessage | Location[], object, object, {userId: number}>, response: Response<ErrorMessage | Location[], {userId: number}>): Promise<void>;
+    createLocation(request: Request<object, ErrorMessage | Location, LocationCreate, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | Location, AuthMiddlewareLocals>): Promise<void>;
+    editLocation(request: Request<{id: string}, ErrorMessage | Location, LocationEdit, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | Location, AuthMiddlewareLocals>): Promise<void>;
+    deleteLocation(request: Request<{id: string}, ErrorMessage | Location, object, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | Location, AuthMiddlewareLocals>): Promise<void>;
+    getLocations(request: Request<object, ErrorMessage | Location[], object, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | Location[], AuthMiddlewareLocals>): Promise<void>;
 }
 // headers - Authorization
 
@@ -47,10 +56,12 @@ export interface UserServiceContract {
     editAccount(id: number, data: UserEdit): Promise<UserSafe>
     changePassword(id: number, newPassword: string): Promise<string>
     createLocation(data: LocationCreate, userId: number): Promise<Location>
-    editLocation(id: number, data: LocationEdit): Promise<Location>
-    deleteLocation(id: number): Promise<Location>
+    editLocation(id: number, data: LocationEdit, userId: number): Promise<Location>
+    deleteLocation(id: number, userId: number): Promise<Location>
     getLocation(id: number): Promise<Location | null>
     getLocations(userId: number): Promise<Location[]>
+    sendPasswordEmail(userId: number, userEmail: string): Promise<void>
+    checkCode(userId: number, code: string, autoDelete?: boolean): Promise<boolean>
 }
 
 export interface UserRepositoryContract {
@@ -65,3 +76,15 @@ export interface UserRepositoryContract {
     getLocation(id: number): Promise<Location | null>
     getLocations(userId: number): Promise<Location[]>
 }
+
+
+// <details>
+// <summary>Successful response example</summary>
+
+// ```json
+// {
+    
+// }
+// ```
+
+// </details>

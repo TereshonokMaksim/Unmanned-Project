@@ -4,6 +4,8 @@ import { sign } from "jsonwebtoken"
 import { ENV } from "../config/env"
 import { StringValue } from "ms"
 import { compare, hash } from "bcryptjs"
+import { transporter } from "../config/email"
+import { CODE_LENGTH, passwordCodes } from "../config/passwordChangeData"
 
 export const UserService: UserServiceContract = {
     async login(credentials) {
@@ -45,27 +47,29 @@ export const UserService: UserServiceContract = {
         }
         return user
     },
-    async changePassword(id, newPassword){
-        const hashedPassword = await hash(newPassword, 10)
-        UserRepository.changePassword(id, hashedPassword)
-        const token = sign({ id: id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue })
-        return token
-    },
     async editAccount(id, data){
         return UserRepository.editUser(id, data)
     },
     async createLocation(data, userId) {
         return UserRepository.createLocation(data, userId)
     },
-    async editLocation(id, data) {
-        if (!UserRepository.getLocation(id)){
+    async editLocation(id, data, userId) {
+        const location = await UserRepository.getLocation(id)
+        if (!location){
             throw new Error("NOT_FOUND")
+        }
+        if (location.userId != userId){
+            throw new Error("FORBIDDEN")
         }
         return UserRepository.editLocation(id, data)
     },
-    async deleteLocation(id) {
-        if (!UserRepository.getLocation(id)){
+    async deleteLocation(id, userId) {
+        const location = await UserRepository.getLocation(id)
+        if (!location){
             throw new Error("NOT_FOUND")
+        }
+        if (location.userId != userId){
+            throw new Error("FORBIDDEN")
         }
         return UserRepository.deleteLocation(id)
     },
@@ -74,5 +78,48 @@ export const UserService: UserServiceContract = {
     },
     async getLocations(userId) {
         return UserRepository.getLocations(userId)
+    },
+    async sendPasswordEmail(userId, userEmail) {
+        function generateCode(){
+            let code = ''
+            for (let index = 0; index < CODE_LENGTH; index++){
+                code+=`${Math.round(Math.random() * 9)}`
+            }
+            return code
+        }
+        const code = generateCode() 
+        passwordCodes.push({code: code, userId: userId})
+        transporter.sendMail({
+            from: 'Dronees',
+            to: userEmail,
+            subject: "Password restoration",
+            text: `Hello, you tried to restore password on our site, here is restoration code: ${code}`
+        })
+    },
+    async checkCode(userId, codeCheck, autoDelete) {
+        const possibleCodeArray = passwordCodes.filter(attempt => attempt.userId == userId)
+        if (!possibleCodeArray.length){
+            throw Error("NOT_FOUND")
+        }
+        for (let possibleCode of possibleCodeArray){
+            if (possibleCode.code == codeCheck){
+                for (let toDelete of possibleCodeArray){ passwordCodes.splice(passwordCodes.indexOf(toDelete), 1) }
+                if (!autoDelete){
+                    possibleCodeArray.push({code: "-1", userId: userId})
+                }
+                return true
+            }
+        }
+        return false
+    },
+    async changePassword(id, newPassword){
+        const verified = await this.checkCode(id, newPassword)
+        if (!verified){
+            throw new Error("FORBIDDEN")
+        }
+        const hashedPassword = await hash(newPassword, 10)
+        UserRepository.changePassword(id, hashedPassword)
+        const token = sign({ id: id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue })
+        return token
     },
 }    
