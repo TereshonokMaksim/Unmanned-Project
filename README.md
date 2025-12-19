@@ -282,6 +282,18 @@ Contains JWT for user identification
     token: string
 ```
 
+__UserEdit__
+Contains all possible data that can be edited in User
+```ts
+    name: string or undefined;
+    surname: string or undefined;
+    partonymic: string or undefined;
+    email: string or undefined;
+    password: string or undefined;
+    birthday: Date or undefined;
+    phoneNumber: string or undefined;
+```
+
 ---
 
 </details>
