@@ -5,10 +5,10 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "binary"
   outputType = "esm"
-  output   = "../src/generated/prisma"
+  output     = "../src/generated/prisma"
 }
 
 datasource db {
@@ -19,12 +19,13 @@ datasource db {
 model User {
   id          Int        @id @default(autoincrement())
   name        String
-  surname     String
-  partonymic  String
+  surname     String?
+  partonymic  String?
   email       String     @unique
   password    String
-  birthday    DateTime
-  phoneNumber String
+  birthday    DateTime?
+  phoneNumber String?
+  isAdmin     Boolean    @default(false)
   locations   Location[]
   orders      Order[]
 }
@@ -37,8 +38,8 @@ model Location {
   houseNum    Int
   flatNum     Int
   entranceNum Int
-  user        User    @relation(fields: [userId], references: [id])
-  userId      Int
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      Int?
   orders      Order[]
 }
 
@@ -65,7 +66,7 @@ model Product {
   name              String
   description       String
   price             Float
-  category          Category?           @relation(fields: [categoryId], references: [id])
+  category          Category?          @relation(fields: [categoryId], references: [id])
   categoryId        Int?
   discount          Float
   media             String

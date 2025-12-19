@@ -17,7 +17,7 @@ export const UserService: UserServiceContract = {
             throw new Error('wrong_credentails')
         } 
 
-        const token = sign({ id: user.id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_ACCESS_EXPIRES_IN as StringValue})
+        const token = sign({ id: user.id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue})
 
         return token
     },
@@ -34,7 +34,7 @@ export const UserService: UserServiceContract = {
             password: hashedPassword
         }
         const newUser = await UserRepository.createUser(hashedCredentials)
-        const token = sign({ id: newUser.id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_ACCESS_EXPIRES_IN as StringValue })
+        const token = sign({ id: newUser.id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue })
         return token
     },
     async me(userId){
@@ -44,5 +44,35 @@ export const UserService: UserServiceContract = {
             throw new Error('not_found')
         }
         return user
-    }
+    },
+    async changePassword(id, newPassword){
+        const hashedPassword = await hash(newPassword, 10)
+        UserRepository.changePassword(id, hashedPassword)
+        const token = sign({ id: id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue })
+        return token
+    },
+    async editAccount(id, data){
+        return UserRepository.editUser(id, data)
+    },
+    async createLocation(data, userId) {
+        return UserRepository.createLocation(data, userId)
+    },
+    async editLocation(id, data) {
+        if (!UserRepository.getLocation(id)){
+            throw new Error("NOT_FOUND")
+        }
+        return UserRepository.editLocation(id, data)
+    },
+    async deleteLocation(id) {
+        if (!UserRepository.getLocation(id)){
+            throw new Error("NOT_FOUND")
+        }
+        return UserRepository.deleteLocation(id)
+    },
+    async getLocation(id) {
+        return UserRepository.getLocation(id)
+    },
+    async getLocations(userId) {
+        return UserRepository.getLocations(userId)
+    },
 }    

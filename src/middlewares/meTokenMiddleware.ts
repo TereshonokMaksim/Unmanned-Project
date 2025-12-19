@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express"
 import { ENV } from "../config/env"
-import { GenericValidators } from "../generic/generic.validators"
 import { verify } from "jsonwebtoken"
 
 
@@ -21,7 +20,7 @@ export function authMiddleware(request: Request, response: Response, next: NextF
         response.status(404).json({message: "Incorrect JWT token"})
         return
     }
-    if (!GenericValidators.validateId(String(actualData.id))){
+    if (isNaN(actualData.id) || Math.round(actualData.id) != actualData.id){
         response.status(404).json({message: "Incorrect JWT token"})
         return
     }

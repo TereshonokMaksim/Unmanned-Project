@@ -1,6 +1,7 @@
 import express from "express";
 import { ProductRouter } from "./Product/product.router";
 import { CategoryRouter } from "./Category/category.router";
+import { UserRouter } from "./User/user.router";
 
 
 const server = express();
@@ -8,6 +9,7 @@ const server = express();
 server.use(express.json())
 server.use("/products/", ProductRouter)
 server.use("/categories/", CategoryRouter)
+server.use("/user/", UserRouter)
 
 const HOST = "localhost"
 const PORT = 8000
