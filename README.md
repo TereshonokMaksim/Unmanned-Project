@@ -686,22 +686,6 @@ __POST /user/log/ - Checks provided user data and, if correct, provides JWT auth
 __GET /user/me/ - Gets user data by JWT token stored in Authorization Header__
 User is returned __without__ password
 
-<details>
-<summary>Successful request Example</summary>
-
-```json
-{
-    "name": "Nikit",
-    "surname": "Bandera", 
-    "partonymic": "Sertonovich", 
-    "email": "seriousman@gmail.com",
-    "password": "NoPassword",
-    "birthday": "18.09.2025",
-    "phoneNumber": "112"
-}
-```
-</details>
-
 | CODE |      Status Code      |    Returns   |            Description           |
 |------|-----------------------|--------------|----------------------------------|
 | 200  |          OK           |     User     |     You get data about you       |
@@ -728,6 +712,7 @@ User is returned __without__ password
 </details>
 
 __PATCH /user/edit_acc - Allows to edit data__
+
 Data is required to be sent as UserEdit
 
 <details>
@@ -737,7 +722,6 @@ Data is required to be sent as UserEdit
 {
     "surname": "Fedora", 
     "email": "Berilium@gmail.com",
-    "password": "xXxCoolPasswordxXx",
     "phoneNumber": "102"
 }
 ```
@@ -757,11 +741,11 @@ Data is required to be sent as UserEdit
 {
     "id": 52,
     "name": "Olexander",
-    "surname": "Adlaways",
+    "surname": "Fedora",
     "partonymic": "Antonov",
-    "email": "worldit@gmail.com",
+    "email": "Berilium@gmail.com",
     "birthday": "14.07.2025",
-    "phoneNumber": "098-934-1899",
+    "phoneNumber": "102",
     "isAdmin": true
 }
 ```
@@ -791,13 +775,11 @@ __POST /user/change_password - Allows to start process of changing password__
 <summary>Successful response example</summary>
 
 ```json
-{
-    "token": "eyJhbGcCgiOiJIUzI1FeIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IysoNzY2MTYwMzU1LCJleHAiOjE3NjY3NjUxOTV9.OgijkTPao4x4UC40Fbiz8lHLgWJ-Uw9kWBOSAhHE27s"
-}
+"OK"
 ```
 
 </details>
-
+    
 __GET /user/change_password/*code* - Verifies user password change with provided CODE__
 
 | CODE |      Status Code      |         Returns        |             Description             |
@@ -844,7 +826,9 @@ __PATCH /user/change_password - Sets new user password__
 <summary>Successful response example</summary>
 
 ```json
-"OK"
+{
+    "token": "eyJhbGcCgiOiJIUzI1FeIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IysoNzY2MTYwMzU1LCJleHAiOjE3NjY3NjUxOTV9.OgijkTPao4x4UC40Fbiz8lHLgWJ-Uw9kWBOSAhHE27s"
+}
 ```
 
 </details>
