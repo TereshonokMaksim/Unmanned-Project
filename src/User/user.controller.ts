@@ -50,7 +50,7 @@ export const UserController: UserControllerContract = {
         catch(error){
             if (error instanceof Error){
                 if (error.message == "USER_EXISTS"){
-                    res.status(400).json({message: "You entered wrong data"})
+                    res.status(409).json({message: "User with this email already exists!"})
                     return
                 }
                 else if (error.message == "WRONG_CREDENTIALS"){

@@ -635,11 +635,12 @@ For password hashing bcryptjs is used
 ```
 </details>
 
-| CODE |      Status Code      |    Returns    |         Description         |
-|------|-----------------------|---------------|-----------------------------|
-| 201  |      OK, created      | AuthResponse  | You successfully registered |
-| 400  |      Bad Request      | ErrorMessage  |   You entered wrong data    |
-| 500  | Internal Server error | ErrorMessage  |   Internal Server Error     |
+| CODE |      Status Code      |    Returns   |             Description             |
+|------|-----------------------|--------------|-------------------------------------|
+| 201  |      OK, created      | AuthResponse |     You successfully registered     |
+| 400  |      Bad Request      | ErrorMessage |       You entered wrong data        |
+| 409  |       Conflict        | ErrorMessage | User with this email already exists |
+| 500  | Internal Server error | ErrorMessage |       Internal Server Error         |
 
 <details>
 <summary>Successful response example</summary>
