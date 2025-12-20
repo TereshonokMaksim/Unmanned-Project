@@ -27,6 +27,7 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             res.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -57,6 +58,7 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             res.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -72,6 +74,7 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             res.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -81,6 +84,7 @@ export const UserController: UserControllerContract = {
             response.status(200).json(await UserService.editAccount(response.locals.userId, body))
         }
         catch(error){
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             response.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -102,6 +106,7 @@ export const UserController: UserControllerContract = {
             response.status(200).json(await UserService.createLocation(body, response.locals.userId))
         }
         catch(error){
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             response.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -140,6 +145,7 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             response.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -162,6 +168,7 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             response.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -170,6 +177,7 @@ export const UserController: UserControllerContract = {
             response.status(200).json(await UserService.getLocations(response.locals.userId))
         }
         catch(error){
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             response.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -184,6 +192,7 @@ export const UserController: UserControllerContract = {
             response.status(200).json("OK")
         }
         catch(error){
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             response.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -206,6 +215,7 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             response.status(500).json({message: "Internal Server Error"})
         }
     },
@@ -228,6 +238,7 @@ export const UserController: UserControllerContract = {
                     return
                 }
             }
+            console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
             response.status(500).json({message: "Internal Server Error"})
         }
     },

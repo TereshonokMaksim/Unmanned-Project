@@ -9,7 +9,7 @@ const server = express();
 server.use(express.json())
 server.use("/products/", ProductRouter)
 server.use("/categories/", CategoryRouter)
-server.use("/user/", UserRouter)
+server.use("/users/", UserRouter)
 
 const HOST = "localhost"
 const PORT = 8000

@@ -12,11 +12,11 @@ export const UserService: UserServiceContract = {
         const user = await UserRepository.getUserByEmail(credentials.email)
 
         if (!user) {
-            throw new Error('not_found')
+            throw new Error('NOT_FOUND')
         }
         const isMatch = await compare(credentials.password, user.password)
         if (!isMatch) {
-            throw new Error('wrong_credentails')
+            throw new Error('WRONG_CREDENTIALS')
         } 
 
         const token = sign({ id: user.id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue})
@@ -26,7 +26,7 @@ export const UserService: UserServiceContract = {
     async register(credentials) {
         const user = await UserRepository.getUserByEmail(credentials.email)
         if (user) {
-            throw new Error(`user_exist`)
+            throw new Error(`USER_EXISTS`)
         }
 
         const hashedPassword = await hash(credentials.password, 10)
@@ -97,6 +97,7 @@ export const UserService: UserServiceContract = {
         })
     },
     async checkCode(userId, codeCheck, autoDelete) {
+        console.log(passwordCodes, "start")
         const possibleCodeArray = passwordCodes.filter(attempt => attempt.userId == userId)
         if (!possibleCodeArray.length){
             throw Error("NOT_FOUND")
@@ -105,20 +106,22 @@ export const UserService: UserServiceContract = {
             if (possibleCode.code == codeCheck){
                 for (let toDelete of possibleCodeArray){ passwordCodes.splice(passwordCodes.indexOf(toDelete), 1) }
                 if (!autoDelete){
-                    possibleCodeArray.push({code: "-1", userId: userId})
+                    passwordCodes.push({code: "-1", userId: userId})
                 }
+                console.log(passwordCodes, "end")
                 return true
             }
         }
         return false
     },
     async changePassword(id, newPassword){
-        const verified = await this.checkCode(id, newPassword)
+        const verified = await this.checkCode(id, "-1")
         if (!verified){
             throw new Error("FORBIDDEN")
         }
+        await this.checkCode(id, "-1", true)
         const hashedPassword = await hash(newPassword, 10)
-        UserRepository.changePassword(id, hashedPassword)
+        await UserRepository.changePassword(id, hashedPassword)
         const token = sign({ id: id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue })
         return token
     },

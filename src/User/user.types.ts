@@ -76,15 +76,3 @@ export interface UserRepositoryContract {
     getLocation(id: number): Promise<Location | null>
     getLocations(userId: number): Promise<Location[]>
 }
-
-
-// <details>
-// <summary>Successful response example</summary>
-
-// ```json
-// {
-    
-// }
-// ```
-
-// </details>
