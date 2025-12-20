@@ -620,8 +620,8 @@ Contains all possible data that can be edited in User
 
 </details>
 
-__POST /user/reg/ - Creates User with data from it's body (registration)__
-For password hashing bcryptjs is used
+__POST /user/reg/ - Creates User with data from it's body (registration)__\
+*For password hashing bcryptjs is used*
 
 <details>
 <summary>Successful request Example</summary>
@@ -653,6 +653,8 @@ For password hashing bcryptjs is used
 
 </details>
 
+---
+
 __POST /user/log/ - Checks provided user data and, if correct, provides JWT authentication__
 
 <details>
@@ -683,8 +685,10 @@ __POST /user/log/ - Checks provided user data and, if correct, provides JWT auth
 
 </details>
 
-__GET /user/me/ - Gets user data by JWT token stored in Authorization Header__
-User is returned __without__ password
+---
+
+__GET /user/me/ - Gets user data by JWT token stored in Authorization Header__\
+*User is returned __without__ password*
 
 | CODE |      Status Code      |    Returns   |            Description           |
 |------|-----------------------|--------------|----------------------------------|
@@ -711,9 +715,10 @@ User is returned __without__ password
 
 </details>
 
-__PATCH /user/edit_acc - Allows to edit data__
+---
 
-Data is required to be sent as UserEdit
+__PATCH /user/edit_acc - Allows to edit data__\
+*Data is required to be sent as UserEdit*
 
 <details>
 <summary>Successful request Example</summary>
@@ -752,6 +757,8 @@ Data is required to be sent as UserEdit
 
 </details>
 
+---
+
 __POST /user/change_password - Allows to start process of changing password__
 
 <details>
@@ -779,7 +786,9 @@ __POST /user/change_password - Allows to start process of changing password__
 ```
 
 </details>
-    
+
+---
+
 __GET /user/change_password/*code* - Verifies user password change with provided CODE__
 
 | CODE |      Status Code      |         Returns        |             Description             |
@@ -800,6 +809,8 @@ __GET /user/change_password/*code* - Verifies user password change with provided
 ```
 
 </details>
+
+---
 
 __PATCH /user/change_password - Sets new user password__
 
@@ -832,6 +843,8 @@ __PATCH /user/change_password - Sets new user password__
 ```
 
 </details>
+
+---
 
 __POST /user/address - Creates new Address (location)__
 
@@ -873,6 +886,8 @@ __POST /user/address - Creates new Address (location)__
 ```
 
 </details>
+
+---
 
 __PATCH /user/address/*id* - Edits address with provided ID__
 
@@ -916,6 +931,8 @@ __PATCH /user/address/*id* - Edits address with provided ID__
 
 </details>
 
+---
+
 __DELETE /user/address/*id* - Deletes address with provided ID__
 
 | CODE |       Status Code     |    Returns   |              Description              |
@@ -944,6 +961,8 @@ __DELETE /user/address/*id* - Deletes address with provided ID__
 ```
 
 </details>
+
+---
 
 __GET /user/address - Gets all user's addresses__
 
