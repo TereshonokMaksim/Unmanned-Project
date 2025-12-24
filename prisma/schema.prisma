@@ -46,7 +46,7 @@ model Location {
 model Order {
   id                  Int               @id @default(autoincrement())
   customerName        String
-  castomerPatronymic  String
+  customerPatronymic  String
   customerPhoneNumber String
   customerEmail       String
   customerComment     String
