@@ -8,6 +8,7 @@
 - [Architecture](#code-architecture-)
 - [Structure](#project-structure-)
 - [API](#api-)
+- [Additional: Authentication System](#authentication-system-)
 - [Additional: Code Style](#code-style-)
 - [Additional: More Info](#more-info-)
 
@@ -620,7 +621,7 @@ Contains all possible data that can be edited in User
 
 </details>
 
-__POST /user/reg/ - Creates User with data from it's body (registration)__\
+__POST /users/reg/ - Creates User with data from it's body (registration)__\
 *For password hashing bcryptjs is used*
 
 <details>
@@ -655,7 +656,7 @@ __POST /user/reg/ - Creates User with data from it's body (registration)__\
 
 ---
 
-__POST /user/log/ - Checks provided user data and, if correct, provides JWT authentication__
+__POST /users/log/ - Checks provided user data and, if correct, provides JWT authentication__
 
 <details>
 <summary>Successful request Example</summary>
@@ -687,7 +688,7 @@ __POST /user/log/ - Checks provided user data and, if correct, provides JWT auth
 
 ---
 
-__GET /user/me/ - Gets user data by JWT token stored in Authorization Header__\
+__GET /users/me/ - Gets user data by JWT token stored in Authorization Header__\
 *User is returned __without__ password*
 
 | CODE |      Status Code      |    Returns   |            Description           |
@@ -717,7 +718,7 @@ __GET /user/me/ - Gets user data by JWT token stored in Authorization Header__\
 
 ---
 
-__PATCH /user/edit_acc - Allows to edit data__\
+__PATCH /users/profile - Allows to edit data__\
 *Data is required to be sent as UserEdit*
 
 <details>
@@ -759,7 +760,7 @@ __PATCH /user/edit_acc - Allows to edit data__\
 
 ---
 
-__POST /user/change_password - Allows to start process of changing password__
+__POST /users/password - Allows to start process of changing password__
 
 <details>
 <summary>Successful request Example</summary>
@@ -789,7 +790,7 @@ __POST /user/change_password - Allows to start process of changing password__
 
 ---
 
-__GET /user/change_password/*code* - Verifies user password change with provided CODE__
+__GET /users/password/*code* - Verifies user password change with provided CODE__
 
 | CODE |      Status Code      |         Returns        |             Description             |
 |------|-----------------------|------------------------|-------------------------------------|
@@ -812,7 +813,7 @@ __GET /user/change_password/*code* - Verifies user password change with provided
 
 ---
 
-__PATCH /user/change_password - Sets new user password__
+__PATCH /users/password - Sets new user password__
 
 <details>
 <summary>Successful request Example</summary>
@@ -846,7 +847,7 @@ __PATCH /user/change_password - Sets new user password__
 
 ---
 
-__POST /user/address - Creates new Address (location)__
+__POST /users/address - Creates new Address (location)__
 
 <details>
 <summary>Successful request Example</summary>
@@ -889,7 +890,7 @@ __POST /user/address - Creates new Address (location)__
 
 ---
 
-__PATCH /user/address/*id* - Edits address with provided ID__
+__PATCH /users/address/*id* - Edits address with provided ID__
 
 <details>
 <summary>Successful request Example</summary>
@@ -933,7 +934,7 @@ __PATCH /user/address/*id* - Edits address with provided ID__
 
 ---
 
-__DELETE /user/address/*id* - Deletes address with provided ID__
+__DELETE /users/address/*id* - Deletes address with provided ID__
 
 | CODE |       Status Code     |    Returns   |              Description              |
 |------|-----------------------|--------------|---------------------------------------|
@@ -964,7 +965,7 @@ __DELETE /user/address/*id* - Deletes address with provided ID__
 
 ---
 
-__GET /user/address - Gets all user's addresses__
+__GET /users/address - Gets all user's addresses__
 
 | CODE |       Status Code     |    Returns   |               Description               |
 |------|-----------------------|--------------|-----------------------------------------|
@@ -1016,10 +1017,257 @@ __GET /user/address - Gets all user's addresses__
 
 </details>
 
+<details>
+<summary><b>Order Module</b></summary>
+
+<details>
+<summary><b>Return Types</b></summary>
+
+- __Order__
+```ts
+    {
+        id: number,
+        userId: number,
+        customerName: string,
+        customerPatronymic: string,
+        customerPhoneNumber: string,
+        customerEmail: string,
+        customerComment: string,
+        deliveryMethod: string,
+        paymentMethod: string,
+        totalPrice: number,
+        totalDiscount: number,
+        locationId: number
+    }
+```
+- __OrderFull__
+```ts
+    {
+        location: {
+            id: number,
+            active: boolean,
+            city: string,
+            street: string,
+            houseNum: number,
+            flatNum: number,
+            entranceNum: number,
+            userId: number | null
+        },
+        productForOrders: {
+            id: number,
+            productId: number,
+            orderId: number,
+            count: number,
+            discount: number,
+        }[],
+        id: number,
+        userId: number,
+        customerName: string,
+        customerPatronymic: string,
+        customerPhoneNumber: string,
+        customerEmail: string,
+        customerComment: string,
+        deliveryMethod: string,
+        paymentMethod: string,
+        totalPrice: number,
+        totalDiscount: number,
+        locationId: number
+    }
+```
+</details>
+
+---
+
+__GET /orders/ - Gets all orders, which are connected to current user__
+
+Status Code table
+
+| CODE |       Status Code     |    Returns   |               Description            |
+|------|-----------------------|--------------|-----------------------p--------------|
+|  200 |           OK          |  Order List  |           Request Successful         |
+|  401 |      Unathorized      | ErrorMessage | You need to login to get your orders |
+|  500 | Internal Server error | ErrorMessage |         Internal Server Error        |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+[
+    {
+        "id": 1,
+        "userId": 23,
+        "customerName": "Mark",
+        "customerPatronymic": "Stepanovich",
+        "customerPhoneNumber": "112",
+        "customerEmail": "noemail@gmail.com",
+        "customerComment": "Cool",
+        "deliveryMethod": "Nova Post",
+        "paymentMethod": "PrivatBank",
+        "totalPrice": 12930,
+        "totalDiscount": 20,
+        "locationId": 2
+    },
+    {
+        "id": 2,
+        "userId": 23,
+        "customerName": "Mark",
+        "customerPatronymic": "Stepanovich",
+        "customerPhoneNumber": "112",
+        "customerEmail": "noemail@gmail.com",
+        "customerComment": "Cool",
+        "deliveryMethod": "UkrPosta",
+        "paymentMethod": "PrivatBank",
+        "totalPrice": 29100,
+        "totalDiscount": 2000,
+        "locationId": 3
+    }
+]
+```
+
+</details>
+
+__GET /orders/*id* - Gets order by specified ID__
+
+
+| CODE |       Status Code     |    Returns   |              Description              |
+|------|-----------------------|--------------|---------------------------------------|
+|  200 |        Created        |   OrderFull  |         Request Successfull           |
+|  400 |      Bad Request      | ErrorMessage |         You need to enter ID          |
+|  401 |      Unathorized      | ErrorMessage |  You need to login to get your order  |
+|  403 |       Forbidden       | ErrorMessage | You can't look orders of other people |
+|  404 |       Not found       | ErrorMessage |   Order with that ID does not exists  |
+|  422 | Unprocessable Content | ErrorMessage |           Invalid order id            |
+|  500 | Internal Server error | ErrorMessage |        Internal Server Error          |
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "location": {
+        "id": 1,
+        "active": true,
+        "city": "Kyiv",
+        "street": "Khreshchatyk",
+        "houseNum": 1,
+        "flatNum": 2,
+        "entranceNum": 3,
+        "userId": null
+    },
+    "productForOrders": [
+        {
+            "id": 3,
+            "productId": 2,
+            "orderId": 5,
+            "count": 5,
+            "discount": 12,
+        },
+        {
+            "id": 4,
+            "productId": 22,
+            "orderId": 5,
+            "count": 2,
+            "discount": 2000,
+        }
+    ],
+    "id": 5,
+    "userId": 23,
+    "customerName": "Mark",
+    "customerPatronymic": "Stepanovich",
+    "customerPhoneNumber": "112",
+    "customerEmail": "noemail@gmail.com",
+    "customerComment": "Cool",
+    "deliveryMethod": "UkrPosta",
+    "paymentMethod": "PrivatBank",
+    "totalPrice": 100000,
+    "totalDiscount": 4060,
+    "locationId": 1
+}
+```
+
+</details>
+
+__DELETE /orders/*id* - Deletes order with defined ID__
+
+| CODE |       Status Code     |    Returns   |               Description               |
+|------|-----------------------|--------------|-----------------------------------------|
+|  200 |        Created        |   OrderFull  |          Deletion Successfull           |
+|  400 |      Bad Request      | ErrorMessage |          You need to enter ID           |
+|  401 |      Unathorized      | ErrorMessage |  You need to login to delete your order |
+|  403 |       Forbidden       | ErrorMessage | You can't delete orders of other people |
+|  404 |       Not found       | ErrorMessage |    Order with that ID does not exists   |
+|  422 | Unprocessable Content | ErrorMessage |            Invalid order id             |
+|  500 | Internal Server error | ErrorMessage |         Internal Server Error           |
+
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+{
+    "location": {
+        "id": 1,
+        "active": true,
+        "city": "Kyiv",
+        "street": "Khreshchatyk",
+        "houseNum": 1,
+        "flatNum": 2,
+        "entranceNum": 3,
+        "userId": null
+    },
+    "productForOrders": [
+        {
+            "id": 3,
+            "productId": 2,
+            "orderId": 5,
+            "count": 5,
+            "discount": 12,
+        },
+        {
+            "id": 4,
+            "productId": 22,
+            "orderId": 5,
+            "count": 2,
+            "discount": 2000,
+        }
+    ],
+    "id": 5,
+    "userId": 23,
+    "customerName": "Mark",
+    "customerPatronymic": "Stepanovich",
+    "customerPhoneNumber": "112",
+    "customerEmail": "noemail@gmail.com",
+    "customerComment": "Cool",
+    "deliveryMethod": "UkrPosta",
+    "paymentMethod": "PrivatBank",
+    "totalPrice": 100000,
+    "totalDiscount": 4060,
+    "locationId": 1
+}
+```
+
+</details>
+
+---
+
+</details>
 
 ----
 
-# Additional
+# Additional [↑](#navigation)
+
+## Authentication System [↑](#navigation)
+
+Authentication system in this project is made using __JWT__ *(JSON Web Token)*\
+Benefits of using it are:\
+- __Easy management and control__ - Doesn't require complex systems or big running times
+- __Good security level__ - JWT Secret Key guarantees that it can't be created by user, only by server, which ensures safety of user data
+- __Stateless Authentication__ - JWT doesn't require local storage or cookies, it is transmitted fully through headers, which increase optimisation on user side
+
+How to use:\
+1. __Get the token__ - login or register on the site (see [API](#api-))
+2. __Put it as header__ - Put it as Bearer Token header
+3. __Done__ - Now you are able to use user-related functions!
 
 ## Code style [↑](#navigation)
 
