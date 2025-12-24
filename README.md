@@ -1083,7 +1083,7 @@ __GET /orders/ - Gets all orders, which are connected to current user__
 Status Code table
 
 | CODE |       Status Code     |    Returns   |               Description            |
-|------|-----------------------|--------------|-----------------------p--------------|
+|------|-----------------------|--------------|--------------------------------------|
 |  200 |           OK          |  Order List  |           Request Successful         |
 |  401 |      Unathorized      | ErrorMessage | You need to login to get your orders |
 |  500 | Internal Server error | ErrorMessage |         Internal Server Error        |
@@ -1259,12 +1259,12 @@ __DELETE /orders/*id* - Deletes order with defined ID__
 ## Authentication System [↑](#navigation)
 
 Authentication system in this project is made using __JWT__ *(JSON Web Token)*\
-Benefits of using it are:\
+Benefits of using it are:
 - __Easy management and control__ - Doesn't require complex systems or big running times
 - __Good security level__ - JWT Secret Key guarantees that it can't be created by user, only by server, which ensures safety of user data
 - __Stateless Authentication__ - JWT doesn't require local storage or cookies, it is transmitted fully through headers, which increase optimisation on user side
 
-How to use:\
+How to use:
 1. __Get the token__ - login or register on the site (see [API](#api-))
 2. __Put it as header__ - Put it as Bearer Token header
 3. __Done__ - Now you are able to use user-related functions!
