@@ -689,6 +689,7 @@ __POST /users/log/ - Checks provided user data and, if correct, provides JWT aut
 ---
 
 __GET /users/me/ - Gets user data by JWT token stored in Authorization Header__\
+__JWT token required__\
 *User is returned __without__ password*
 
 | CODE |      Status Code      |    Returns   |            Description           |
@@ -719,6 +720,7 @@ __GET /users/me/ - Gets user data by JWT token stored in Authorization Header__\
 ---
 
 __PATCH /users/profile - Allows to edit data__\
+__JWT token required__\
 *Data is required to be sent as UserEdit*
 
 <details>
@@ -783,7 +785,9 @@ __POST /users/password - Allows to start process of changing password__
 <summary>Successful response example</summary>
 
 ```json
-"OK"
+{
+    "idCode": 103429549253
+}
 ```
 
 </details>
@@ -820,6 +824,7 @@ __PATCH /users/password - Sets new user password__
 
 ```json
 {
+    "idCode": 193650264024,
     "password": "VerySecurePassword"
 }
 ```
@@ -847,7 +852,8 @@ __PATCH /users/password - Sets new user password__
 
 ---
 
-__POST /users/address - Creates new Address (location)__
+__POST /users/address - Creates new Address (location)__\
+__JWT token required__
 
 <details>
 <summary>Successful request Example</summary>
@@ -890,7 +896,8 @@ __POST /users/address - Creates new Address (location)__
 
 ---
 
-__PATCH /users/address/*id* - Edits address with provided ID__
+__PATCH /users/address/*id* - Edits address with provided ID__\
+__JWT token required__
 
 <details>
 <summary>Successful request Example</summary>
@@ -934,7 +941,8 @@ __PATCH /users/address/*id* - Edits address with provided ID__
 
 ---
 
-__DELETE /users/address/*id* - Deletes address with provided ID__
+__DELETE /users/address/*id* - Deletes address with provided ID__\
+__JWT token required__
 
 | CODE |       Status Code     |    Returns   |              Description              |
 |------|-----------------------|--------------|---------------------------------------|
@@ -965,7 +973,8 @@ __DELETE /users/address/*id* - Deletes address with provided ID__
 
 ---
 
-__GET /users/address - Gets all user's addresses__
+__GET /users/address - Gets all user's addresses__\
+__JWT token required__
 
 | CODE |       Status Code     |    Returns   |               Description               |
 |------|-----------------------|--------------|-----------------------------------------|
@@ -1078,7 +1087,8 @@ __GET /users/address - Gets all user's addresses__
 
 ---
 
-__GET /orders/ - Gets all orders, which are connected to current user__
+__GET /orders/ - Gets all orders, which are connected to current user__\
+__JWT token required__
 
 Status Code table
 
@@ -1126,7 +1136,8 @@ Status Code table
 
 </details>
 
-__GET /orders/*id* - Gets order by specified ID__
+__GET /orders/*id* - Gets order by specified ID__\
+__JWT token required__
 
 
 | CODE |       Status Code     |    Returns   |              Description              |
@@ -1187,7 +1198,8 @@ __GET /orders/*id* - Gets order by specified ID__
 
 </details>
 
-__DELETE /orders/*id* - Deletes order with defined ID__
+__DELETE /orders/*id* - Deletes order with defined ID__\
+__JWT token required__
 
 | CODE |       Status Code     |    Returns   |               Description               |
 |------|-----------------------|--------------|-----------------------------------------|

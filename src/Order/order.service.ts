@@ -14,7 +14,8 @@ export const OrderService: OrderServiceContract = {
         if (order.user.id != userId){
             throw new Error("FORBIDDEN")
         }
-        return order
+        const {user, ...allData} = order
+        return allData
     },
     async deleteOrder(orderId, userId) {
         const order = await OrderRepository.getOrderById(orderId)
@@ -25,6 +26,10 @@ export const OrderService: OrderServiceContract = {
         if (!deletedOrder){
             throw new Error("NOT_FOUND")
         }
-        return deletedOrder
-    }
+        const {user, ...allData} = deletedOrder
+        return allData
+    },
+    async createOrder(data, userId) {
+        return await OrderRepository.createOrder(data, userId)
+    },
 }

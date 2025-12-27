@@ -2,7 +2,7 @@ import { AuthResponse, ErrorMessage, RegisterCreds, UserControllerContract } fro
 import { UserService } from "./user.service";
 import { UserRepository } from "./user.repository";
 import { json } from "express";
-import { CODE_LENGTH } from "../config/passwordChangeData";
+import { CODE_LENGTH, passwordCodes } from "../config/passwordChangeData";
 
 
 export const UserController: UserControllerContract = {
@@ -188,8 +188,7 @@ export const UserController: UserControllerContract = {
                 response.status(400).json({message: "Email is not specified"})
                 return
             }
-            await UserService.sendPasswordEmail(response.locals.userId, newEmail)
-            response.status(200).json("OK")
+            response.status(200).json(await UserService.sendPasswordEmail(newEmail))
         }
         catch(error){
             console.log(`Unexpected error occured at UserController\nError: \n\n${error}`)
@@ -206,7 +205,8 @@ export const UserController: UserControllerContract = {
             if (code.length != CODE_LENGTH){
                 response.status(400).json({message: "You need to provide valid code"})
             }
-            response.status(200).json({success: await UserService.checkCode(response.locals.userId, code)})
+            const real = await UserService.checkCode(code, false)
+            response.status(200).json({success: Boolean(real)})
         }
         catch(error){
             if (error instanceof Error){
@@ -221,11 +221,13 @@ export const UserController: UserControllerContract = {
     },
     async changePassword(request, response){
         try{    
+            console.log(passwordCodes)
             const body = request.body
             if (!body.password){
                 response.status(400).json({message: "New password is missing"})
+                return
             }
-            response.status(200).json({token: await UserService.changePassword(response.locals.userId, body.password)})
+            response.status(200).json({token: await UserService.changePassword(body.idCode, body.password)})
         }
         catch(error){
             if (error instanceof Error){
