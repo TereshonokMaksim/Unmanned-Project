@@ -34,4 +34,25 @@ export const OrderRepository: OrderRepositoryContract = {
             throw error
         }
     },
+    async createOrder(data, userId) {
+        try{
+            return await client.order.create({data: {
+                customerName: data.customerName,
+                customerPatronymic: data.customerPatronymic,
+                customerPhoneNumber: data.customerPhoneNumber,
+                customerEmail: data.customerEmail,
+                customerComment: data.customerComment,
+                deliveryMethod: data.deliveryMethod,
+                paymentMethod: data.paymentMethod,
+                totalPrice: data.totalPrice,
+                totalDiscount: data.totalDiscount,
+                userId: userId,
+                locationId: data.locationId
+            }, include: {location: true, productForOrders: true, user: true}})
+        }
+        catch(error){
+            console.log(`-----------\ndeleteOrder Error:\n${error}\n-----------`)
+            throw error
+        }
+    }
 }

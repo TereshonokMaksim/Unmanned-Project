@@ -79,7 +79,7 @@ export const UserService: UserServiceContract = {
     async getLocations(userId) {
         return UserRepository.getLocations(userId)
     },
-    async sendPasswordEmail(userId, userEmail) {
+    async sendPasswordEmail(userEmail) {
         function generateCode(){
             let code = ''
             for (let index = 0; index < CODE_LENGTH; index++){
@@ -87,18 +87,30 @@ export const UserService: UserServiceContract = {
             }
             return code
         }
+        const userCheck = await UserRepository.getUserByEmail(userEmail)
+        if (!userCheck){
+            throw new Error("USER_NOT_FOUND")
+        }
         const code = generateCode() 
-        passwordCodes.push({code: code, userId: userId})
+        const identificationCode = generateCode()
+        passwordCodes.push({code: code, originalCode: identificationCode, email: userEmail})
         transporter.sendMail({
             from: 'Dronees',
             to: userEmail,
             subject: "Password restoration",
-            text: `Hello, you tried to restore password on our site, here is restoration code: ${code}`
+            text: `Hello, you tried to restore password on our site. Here is restoration code link: http://localhost:8000/users/password/${code}`
         })
+        return {idCode: identificationCode}
     },
-    async checkCode(userId, codeCheck, autoDelete) {
+    async checkCode(codeCheck, autoDelete, idCode?) {
         console.log(passwordCodes, "start")
-        const possibleCodeArray = passwordCodes.filter(attempt => attempt.userId == userId)
+        let possibleCodeArray;
+        if (idCode){
+            possibleCodeArray = passwordCodes.filter(attempt => attempt.originalCode == idCode)
+        }
+        else {
+            possibleCodeArray = passwordCodes.filter(attempt => attempt.code == codeCheck)
+        }
         if (!possibleCodeArray.length){
             throw Error("NOT_FOUND")
         }
@@ -106,23 +118,27 @@ export const UserService: UserServiceContract = {
             if (possibleCode.code == codeCheck){
                 for (let toDelete of possibleCodeArray){ passwordCodes.splice(passwordCodes.indexOf(toDelete), 1) }
                 if (!autoDelete){
-                    passwordCodes.push({code: "-1", userId: userId})
+                    passwordCodes.push({code: "-1", originalCode: possibleCode.originalCode, email: possibleCode.email})
                 }
                 console.log(passwordCodes, "end")
-                return true
+                return possibleCode
             }
         }
         return false
     },
-    async changePassword(id, newPassword){
-        const verified = await this.checkCode(id, "-1")
+    async changePassword(idCode, newPassword){
+        const verified = await this.checkCode("-1", false, idCode)
         if (!verified){
             throw new Error("FORBIDDEN")
         }
-        await this.checkCode(id, "-1", true)
+        await this.checkCode("-1", true, idCode)
+        const user = await UserRepository.getUserByEmail(verified.email)
+        if (!user){
+            throw new Error("NOT_FOUND")
+        }
         const hashedPassword = await hash(newPassword, 10)
-        await UserRepository.changePassword(id, hashedPassword)
-        const token = sign({ id: id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue })
+        await UserRepository.changePassword(user.id, hashedPassword)
+        const token = sign({ id: user.id }, ENV.JWT_ACCESS_SECRET_KEY, { expiresIn: ENV.JWT_EXPIRES_IN as StringValue })
         return token
     },
 }    

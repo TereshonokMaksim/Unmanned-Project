@@ -31,6 +31,16 @@ export type LocationEdit = Partial<Omit<Location, "id" | "userId">>
 
 export type AuthMiddlewareLocals = {userId: number}
 
+export interface passwordCode {
+    code: string
+    originalCode: string
+    email: string
+}
+
+export interface identificationCode {
+    idCode: string
+}
+
 export type UserCreate = Prisma.UserCreateInput
 export interface UserControllerContract {
     login(request: Request<object, ErrorMessage | AuthResponse, LogCreds>, response: Response<ErrorMessage | AuthResponse>): Promise<void>;
@@ -38,9 +48,9 @@ export interface UserControllerContract {
     me(request: Request<object, ErrorMessage | UserSafe, object, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | UserSafe, AuthMiddlewareLocals>): Promise<void>;
     editAccount(request: Request<object, ErrorMessage | UserSafe, UserEdit, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | UserSafe, AuthMiddlewareLocals>): Promise<void>;
     // Password change part
-    changePassword(request: Request<object, ErrorMessage | AuthResponse, {password: string}, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | AuthResponse, AuthMiddlewareLocals>): Promise<void>;
-    startPasswordChange(request: Request<object, ErrorMessage | "OK", {email: string}, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | "OK", AuthMiddlewareLocals>): Promise<void>;
-    verifyPasswordCode(request: Request<{code: string}, ErrorMessage | PasswordChangeResponse, object, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | PasswordChangeResponse, AuthMiddlewareLocals>): Promise<void>;
+    changePassword(request: Request<object, ErrorMessage | AuthResponse, {password: string, idCode: string}>, response: Response<ErrorMessage | AuthResponse>): Promise<void>;
+    startPasswordChange(request: Request<object, ErrorMessage | identificationCode, {email: string}>, response: Response<ErrorMessage | identificationCode>): Promise<void>;
+    verifyPasswordCode(request: Request<{code: string}, ErrorMessage | PasswordChangeResponse>, response: Response<ErrorMessage | PasswordChangeResponse>): Promise<void>;
     // Location part
     createLocation(request: Request<object, ErrorMessage | Location, LocationCreate, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | Location, AuthMiddlewareLocals>): Promise<void>;
     editLocation(request: Request<{id: string}, ErrorMessage | Location, LocationEdit, object, AuthMiddlewareLocals>, response: Response<ErrorMessage | Location, AuthMiddlewareLocals>): Promise<void>;
@@ -54,14 +64,14 @@ export interface UserServiceContract {
     register(credentials: RegisterCreds): Promise<string>;
     me(userId: number): Promise<UserSafe>
     editAccount(id: number, data: UserEdit): Promise<UserSafe>
-    changePassword(id: number, newPassword: string): Promise<string>
+    changePassword(idCode: string, newPassword: string): Promise<string>
     createLocation(data: LocationCreate, userId: number): Promise<Location>
     editLocation(id: number, data: LocationEdit, userId: number): Promise<Location>
     deleteLocation(id: number, userId: number): Promise<Location>
     getLocation(id: number): Promise<Location | null>
     getLocations(userId: number): Promise<Location[]>
-    sendPasswordEmail(userId: number, userEmail: string): Promise<void>
-    checkCode(userId: number, code: string, autoDelete?: boolean): Promise<boolean>
+    sendPasswordEmail(userEmail: string): Promise<identificationCode>
+    checkCode(code: string, autoDelete?: boolean, idCode?: string): Promise<false | passwordCode>
 }
 
 export interface UserRepositoryContract {
