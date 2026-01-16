@@ -129,4 +129,37 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error;
         }
     },
+    async getNewProducts(skip, take) {
+        try{
+            return client.product.findMany({
+                take,
+                skip,
+                include:{
+                    _count: {
+                        select: { productForOrders: true }
+                    }
+                },
+                orderBy: {
+                    productForOrders: { _count: "desc" }
+                }
+            })
+        }
+        catch(error){
+            throw error
+        }
+    },
+    async getPopularProducts(skip, take) {
+        try{
+            return client.product.findMany({
+                take,
+                skip,
+                orderBy: {
+                    id: "desc"
+                }
+            })
+        }
+        catch(error){
+            throw error
+        }
+    },
 };

@@ -57,6 +57,8 @@ export interface ProductServiceContract {
     createDetailBasicText(data: FontBlockCreate): Promise<FontBlock>
     createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
     // amazing
+    getNewProducts(skip?: number, take?: number): Promise<Product[]>
+    getPopularProducts(skip?: number, take?: number): Promise<Product[]>
 } 
 export interface ProductRepositoryContract {
     getAllProducts(take?: number, skip?: number): Promise<Product[]>
@@ -68,12 +70,15 @@ export interface ProductRepositoryContract {
     createProductDetail(data: DetailDataInput): Promise<DetailData>
     createDetailBasicText(data: FontBlockCreate): Promise<FontBlock>
     createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
+    getNewProducts(skip?: number, take?: number): Promise<Product[]>
+    getPopularProducts(skip?: number, take?: number): Promise<Product[]>
 }
 
 export interface ProductControllerContract {
-    getAllProducts: (req: Request<object, Product[] | ErrorMessage, void, { skip?: string, take?: string, productCategory?: string }>, res: Response<Product[] | ErrorMessage>) => Promise<void>
+    getAllProducts: (req: Request<object, Product[] | ErrorMessage, object, { skip?: string, take?: string, productCategory?: string }>, res: Response<Product[] | ErrorMessage>) => Promise<void>
     getProductById: (req: Request<{ id: string }, FullProduct | ErrorMessage>, res: Response<FullProduct | ErrorMessage>) => Promise<void>
     createProduct: (req: Request<object, Product | ErrorMessage, ProductCreate>, res: Response<Product | ErrorMessage>) => Promise<void>
     deleteProduct: (req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => Promise<void>
     createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage>) => Promise<void>
+    getSpecialProducts: (req: Request<object, Product[] | ErrorMessage, object, {skip?: string, take?: string, new?: string, popular?: string}>, res: Response<Product[] | ErrorMessage>) => Promise<void>
 }

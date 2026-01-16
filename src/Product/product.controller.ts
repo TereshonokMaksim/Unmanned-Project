@@ -165,5 +165,48 @@ export const ProductController: ProductControllerContract = {
             res.status(500).json({"message": "Internal Server Error"})
             console.log(`Unexpected error in createInfoBlock -- Controller\nError:\n${error}`)
         }
-    }
+    },
+    async getSpecialProducts(req, res) {
+        try{
+            const {skip, take, new: anotherNew, popular} = req.query
+            let cookedTake, cookedSkip
+            if (take){
+                if (isNaN(+take)){
+                    res.status(400).json({"message": "Wrong skip or take"})
+                    return
+                }
+                if (+take < 0 || Math.round(+take) != +take){
+                    res.status(400).json({"message": "Wrong skip or take"})
+                    return
+                }
+                cookedTake = +take
+            }
+            if (skip){
+                if (isNaN(+skip)){
+                    res.status(400).json({"message": "Wrong skip or take"})
+                    return
+                }
+                if (+skip < 0 || Math.round(+skip) != +skip){
+                    res.status(400).json({"message": "Wrong skip or take"})
+                    return
+                }
+                cookedSkip = +skip
+            }
+            if (anotherNew){
+                if (anotherNew == "true"){
+                    res.status(200).json(await ProductService.getNewProducts(cookedSkip, cookedTake))
+                }
+                return
+            }
+            if (popular){
+                if (popular == "true"){
+                    res.status(200).json(await ProductService.getPopularProducts(cookedSkip, cookedTake))
+                }
+            }
+        }
+        catch(error){
+            res.status(500).json({"message": "Internal Server Error"})
+            console.log(`Unexpected error in getSpecialProducts -- Controller\nError:\n${error}`)
+        }
+    },
 }
