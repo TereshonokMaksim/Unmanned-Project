@@ -165,5 +165,43 @@ export const ProductController: ProductControllerContract = {
             res.status(500).json({"message": "Internal Server Error"})
             console.log(`Unexpected error in createInfoBlock -- Controller\nError:\n${error}`)
         }
+    },
+    async getProductsByCategory(req, res) {
+        try {
+            const { sortBy, page = 1, limit = 10 } = req.query;
+
+            const skip = (Number(page) - 1) * Number(limit);
+
+            let sortCondition: any = {};
+
+        if (sortBy === 'newest') {
+            sortCondition = { createdAt: -1 };
+        } else if (sortBy === 'popular') {
+            sortCondition = { views: -1 };
+        } else {
+            sortCondition = { createdAt: -1 };
+        }
+
+        const products = await ProductService.find({})
+        .sort(sortCondition) 
+        .skip(skip)
+        .limit(Number(limit));
+
+        const total = await ProductService.countDocuments({});
+
+        res.json({
+        status: "success",
+        code: 200,
+        data: {
+            result: products,
+            total,
+            page: Number(page),
+            totalPages: Math.ceil(total / Number(limit)),
+        },
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+
+  }
     }
 }

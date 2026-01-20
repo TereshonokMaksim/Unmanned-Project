@@ -76,4 +76,5 @@ export interface ProductControllerContract {
     createProduct: (req: Request<object, Product | ErrorMessage, ProductCreate>, res: Response<Product | ErrorMessage>) => Promise<void>
     deleteProduct: (req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => Promise<void>
     createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage>) => Promise<void>
+    getProductsByCategory: (req: Request<object, Product[] | ErrorMessage, void, { categoryId: string, skip?: string, take?: string }>, res: Response<Product[] | ErrorMessage>) => Promise<void>
 }
