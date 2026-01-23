@@ -3,9 +3,15 @@ import { ProductRouter } from "./Product/product.router";
 import { CategoryRouter } from "./Category/category.router";
 import { UserRouter } from "./User/user.router";
 import { OrderRouter } from "./Order/order.router";
+import cors from "cors"
 
 
 const server = express();
+
+server.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}))
 
 server.use(express.json())
 server.use("/products/", ProductRouter)

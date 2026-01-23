@@ -5,47 +5,51 @@ import { ProductService } from "./product.service";
 export const ProductController: ProductControllerContract = {
     async getAllProducts(req, res){
         try{
-            const take: string | undefined = req.query.take
-            const skip: string | undefined = req.query.skip
-            let cookedSkip: number | undefined = undefined; let cookedTake: number | undefined = undefined
-            if (take){
-                if (isNaN(+take)){
-                    res.status(400).json({"message": "Wrong skip or take"})
-                    return
-                }
-                if (+take < 0 || Math.round(+take) != +take){
-                    res.status(400).json({"message": "Wrong skip or take"})
-                    return
-                }
-                cookedTake = +take
-            }
-            if (skip){
-                if (isNaN(+skip)){
-                    res.status(400).json({"message": "Wrong skip or take"})
-                    return
-                }
-                if (+skip < 0 || Math.round(+skip) != +skip){
-                    res.status(400).json({"message": "Wrong skip or take"})
-                    return
-                }
-                cookedSkip = +skip
-            }
+            const take = res.locals.take
+            const skip = res.locals.skip
             const cat = req.query.productCategory 
             if (!cat){
-                res.status(200).json(await ProductService.getAllProducts(cookedTake, cookedSkip))
+                res.status(200).json(await ProductService.getAllProducts(take, skip))
                 return
             }
             if (isNaN(+cat)){ 
                 res.status(404).json({"message": "Wrong/Bad categoryId"})
                 return
             }
-            res.status(200).json(await ProductService.getProductsByCategory(+cat, cookedTake, cookedSkip))
+            res.status(200).json(await ProductService.getProductsByCategory(+cat, take, skip))
         }
         catch(error){
             res.status(500).json({"message": "Internal Server Error"})
             console.log(`Unexpected error in getAllProducts -- Controller\nError:\n${error}`)
         }
     },
+    async getSuggestedProducts(req, res){
+        try{
+            const take = res.locals.take
+            const skip = res.locals.skip
+            const newProducts: string | undefined = req.query.new
+            const popularProducts: string | undefined = req.query.popular
+            console.log(newProducts, popularProducts)
+            if (newProducts){
+                if (newProducts == "true"){
+                    res.status(200).json(await ProductService.getNewProducts(skip, take))
+                }
+                return
+            }
+            if (popularProducts){
+                if (popularProducts == "true"){
+                    res.status(200).json(await ProductService.getPopularProducts(skip, take))
+                }
+                return
+            }
+            res.status(200).json(await ProductService.getAllProducts(take, skip))
+        }
+        catch(error){
+            res.status(500).json({"message": "Internal Server Error"})
+            console.log(`Unexpected error in getSuggestedProducts -- Controller\nError:\n${error}`)
+        }
+    }
+    ,
     async getProductById(req, res) {
         try{
             const id = req.params.id
@@ -165,5 +169,48 @@ export const ProductController: ProductControllerContract = {
             res.status(500).json({"message": "Internal Server Error"})
             console.log(`Unexpected error in createInfoBlock -- Controller\nError:\n${error}`)
         }
-    }
+    },
+    // async getSpecialProducts(req, res) {
+    //     try{
+    //         const {skip, take, new: anotherNew, popular} = req.query
+    //         let cookedTake, cookedSkip
+    //         if (take){
+    //             if (isNaN(+take)){
+    //                 res.status(400).json({"message": "Wrong skip or take"})
+    //                 return
+    //             }
+    //             if (+take < 0 || Math.round(+take) != +take){
+    //                 res.status(400).json({"message": "Wrong skip or take"})
+    //                 return
+    //             }
+    //             cookedTake = +take
+    //         }
+    //         if (skip){
+    //             if (isNaN(+skip)){
+    //                 res.status(400).json({"message": "Wrong skip or take"})
+    //                 return
+    //             }
+    //             if (+skip < 0 || Math.round(+skip) != +skip){
+    //                 res.status(400).json({"message": "Wrong skip or take"})
+    //                 return
+    //             }
+    //             cookedSkip = +skip
+    //         }
+    //         if (anotherNew){
+    //             if (anotherNew == "true"){
+    //                 res.status(200).json(await ProductService.getNewProducts(cookedSkip, cookedTake))
+    //             }
+    //             return
+    //         }
+    //         if (popular){
+    //             if (popular == "true"){
+    //                 res.status(200).json(await ProductService.getPopularProducts(cookedSkip, cookedTake))
+    //             }
+    //         }
+    //     }
+    //     catch(error){
+    //         res.status(500).json({"message": "Internal Server Error"})
+    //         console.log(`Unexpected error in getSpecialProducts -- Controller\nError:\n${error}`)
+    //     }
+    // },
 }

@@ -37,4 +37,10 @@ export const ProductService: ProductServiceContract ={
     createProductDetail(data) {
         return ProductRepository.createProductDetail(data)
     },
+    async getNewProducts(skip, take) {
+        return ProductRepository.getNewProducts(skip, take)
+    },
+    async getPopularProducts(skip, take) {
+        return ProductRepository.getPopularProducts(skip, take)
+    }
 }

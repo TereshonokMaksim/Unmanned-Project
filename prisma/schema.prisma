@@ -79,8 +79,8 @@ model ProductForOrder {
   id        Int     @id @default(autoincrement())
   product   Product @relation(fields: [productId], references: [id])
   productId Int
-  order     Order   @relation(fields: [orderId], references: [id])
-  orderId   Int
+  order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   Int?
   count     Int
   discount  Float
 }
