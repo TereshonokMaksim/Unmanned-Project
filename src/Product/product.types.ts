@@ -46,6 +46,11 @@ export type FullProduct = Prisma.ProductGetPayload<{
     }
 }>
 
+export interface PaginationMiddlewareLocals {
+    skip?: number
+    take?: number
+}
+
 export interface ProductServiceContract {
     getAllProducts(take?: number, skip?: number): Promise<Product[]>
     getProductById(id: number): Promise<FullProduct | null>
@@ -75,10 +80,11 @@ export interface ProductRepositoryContract {
 }
 
 export interface ProductControllerContract {
-    getAllProducts: (req: Request<object, Product[] | ErrorMessage, object, { skip?: string, take?: string, productCategory?: string }>, res: Response<Product[] | ErrorMessage>) => Promise<void>
+    getSuggestedProducts: (req: Request<object, Product[] | ErrorMessage, object, { perPage?: string, page?: string, productCategory?: string, new?: string, popular?: string }>, res: Response<Product[] | ErrorMessage, PaginationMiddlewareLocals>) => Promise<void>
+    getAllProducts: (req: Request<object, Product[] | ErrorMessage, object, { perPage?: string, page?: string, productCategory?: string }>, res: Response<Product[] | ErrorMessage, PaginationMiddlewareLocals>) => Promise<void>
     getProductById: (req: Request<{ id: string }, FullProduct | ErrorMessage>, res: Response<FullProduct | ErrorMessage>) => Promise<void>
     createProduct: (req: Request<object, Product | ErrorMessage, ProductCreate>, res: Response<Product | ErrorMessage>) => Promise<void>
     deleteProduct: (req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => Promise<void>
     createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage>) => Promise<void>
-    getSpecialProducts: (req: Request<object, Product[] | ErrorMessage, object, {skip?: string, take?: string, new?: string, popular?: string}>, res: Response<Product[] | ErrorMessage>) => Promise<void>
+    // getSpecialProducts: (req: Request<object, Product[] | ErrorMessage, object, {skip?: string, take?: string}>, res: Response<Product[] | ErrorMessage>) => Promise<void>
 }

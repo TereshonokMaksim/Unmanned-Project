@@ -119,8 +119,8 @@ Query Table
 
 |  Parameter |  Type   |               Description                |
 |------------|---------|------------------------------------------|
-|    skip    | Integer |  Skips defined amount of first products  |
-|    take    | Integer |     Takes defined amount of products     |
+|    page    | Integer |      Skips defined amount of pages       |
+|  perPage   | Integer |     How much products are on one page    |
 | categoryId | Integer | Gets only products from defined category |
 
 Status Code table
@@ -128,7 +128,7 @@ Status Code table
 | CODE |       Status Code     |    Returns   |       Description     |
 |------|-----------------------|--------------|-----------------------|
 |  200 |           OK          | Product List |   Request Successful  |
-|  400 |       Bad Request     | ErrorMessage |   Wrong skip or take  |
+|  400 |      Bad Request      | ErrorMessage | Wrong page or perPage |
 |  404 |       Not Found       | ErrorMessage | Wrong/Bad categoryId  |
 |  500 | Internal Server error | ErrorMessage | Internal Server Error |
 
@@ -140,7 +140,7 @@ Status Code table
 [
     {
         "name": "Uraninite",
-        "id": 52,
+        "id": 51,
         "description": "Little pieces of Uraninite for not so cheap price",
         "price": 300,
         "categoryId": 5,
@@ -157,6 +157,66 @@ Status Code table
         "discount": 0,
         "media": "https://www.le-comptoir-geologique.com/_media/img/large/garnierite.webp",
         "count": 1930,
+    }
+]
+```
+
+---
+
+__GET /products/suggestions - Gets all products sorted by query parameter__
+
+Query Table
+
+|  Parameter |  Type   |                    Description                     |
+|------------|---------|----------------------------------------------------|
+|    page    | Integer |           Skips defined amount of pages            |
+|  perPage   | Integer |          How much products are on one page         |
+|    new     | Boolean | Sorts products by how new they are (id are sorted) |
+|  popular   | Boolean | Sorts products by their popularity (order number)  |
+
+Status Code table
+
+| CODE |       Status Code     |    Returns   |       Description     |
+|------|-----------------------|--------------|-----------------------|
+|  200 |           OK          | Product List |   Request Successful  |
+|  400 |      Bad Request      | ErrorMessage | Wrong page or perPage |
+|  500 | Internal Server error | ErrorMessage | Internal Server Error |
+
+
+<details>
+<summary>Successful response example</summary>
+
+```json
+[
+    {
+        "id": 10,
+        "name": "DJI Mini 4K",
+        "description": "Hard-To-Use Mega Camera Drone",
+        "price": 899,
+        "categoryId": null,
+        "discount": 0,
+        "media": "",
+        "count": 10
+    },
+    {
+        "id": 9,
+        "name": "DJI Mini Pro",
+        "description": "Impossible-To-Use No Camera Drone",
+        "price": 299,
+        "categoryId": null,
+        "discount": 0,
+        "media": "",
+        "count": 10
+    },
+    {
+        "id": 8,
+        "name": "DJI Mini 4K",
+        "description": "Easy-To-Use Mini Camera Drone",
+        "price": 499,
+        "categoryId": null,
+        "discount": 0,
+        "media": "",
+        "count": 10
     }
 ]
 ```

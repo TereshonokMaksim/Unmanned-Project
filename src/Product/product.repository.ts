@@ -129,7 +129,7 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error;
         }
     },
-    async getNewProducts(skip, take) {
+    async getPopularProducts(skip, take) {
         try{
             return client.product.findMany({
                 take,
@@ -148,7 +148,7 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error
         }
     },
-    async getPopularProducts(skip, take) {
+    async getNewProducts(skip, take) {
         try{
             return client.product.findMany({
                 take,
