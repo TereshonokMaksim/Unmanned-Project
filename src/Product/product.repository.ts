@@ -162,4 +162,7 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error
         }
     },
+    async getSameProducts(productId, limit, priceDelta) {
+        
+    },
 };

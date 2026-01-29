@@ -90,4 +90,5 @@ export interface ProductControllerContract {
     createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage>) => Promise<void>
     // getSpecialProducts: (req: Request<object, Product[] | ErrorMessage, object, {skip?: string, take?: string}>, res: Response<Product[] | ErrorMessage>) => Promise<void>
     getSameProducts: (req: Request<{ id: string },Product[] | ErrorMessage,object,{limit?: string,priceDelta?: string}>,res: Response<Product[] | ErrorMessage>) => Promise<void>
+    // 
 }

@@ -43,4 +43,7 @@ export const ProductService: ProductServiceContract ={
     async getPopularProducts(skip, take) {
         return ProductRepository.getPopularProducts(skip, take)
     }
+    async getSameProducts(productId, limit, priceDelta) {
+        
+    },
 }

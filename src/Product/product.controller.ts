@@ -170,6 +170,9 @@ export const ProductController: ProductControllerContract = {
             console.log(`Unexpected error in createInfoBlock -- Controller\nError:\n${error}`)
         }
     },
+    async getSameProducts(req, res) {
+        
+    },
     
     // async getSpecialProducts(req, res) {
     //     try{
