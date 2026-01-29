@@ -64,6 +64,7 @@ export interface ProductServiceContract {
     // amazing
     getNewProducts(skip?: number, take?: number): Promise<Product[]>
     getPopularProducts(skip?: number, take?: number): Promise<Product[]>
+    getSameProducts(productId: number,limit: number,priceDelta?: number): Promise<Product[]>
 } 
 export interface ProductRepositoryContract {
     getAllProducts(take?: number, skip?: number): Promise<Product[]>
@@ -77,6 +78,7 @@ export interface ProductRepositoryContract {
     createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
     getNewProducts(skip?: number, take?: number): Promise<Product[]>
     getPopularProducts(skip?: number, take?: number): Promise<Product[]>
+    getSameProducts(productId: number,limit: number,priceDelta?: number): Promise<Product[]>
 }
 
 export interface ProductControllerContract {
@@ -87,4 +89,5 @@ export interface ProductControllerContract {
     deleteProduct: (req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => Promise<void>
     createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage>) => Promise<void>
     // getSpecialProducts: (req: Request<object, Product[] | ErrorMessage, object, {skip?: string, take?: string}>, res: Response<Product[] | ErrorMessage>) => Promise<void>
+    getSameProducts: (req: Request<{ id: string },Product[] | ErrorMessage,object,{limit?: string,priceDelta?: string}>,res: Response<Product[] | ErrorMessage>) => Promise<void>
 }
