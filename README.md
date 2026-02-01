@@ -160,6 +160,7 @@ Status Code table
     }
 ]
 ```
+</details>
 
 ---
 

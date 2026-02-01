@@ -154,7 +154,7 @@ export const ProductRepository: ProductRepositoryContract = {
                 take,
                 skip,
                 orderBy: {
-                    id: "desc"
+                    createdAt: "desc"
                 }
             })
         }
