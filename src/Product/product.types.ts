@@ -3,7 +3,18 @@ import { Prisma } from '../generated/prisma/client'
 
 export interface ErrorMessage {
     message: string
-} 
+}
+export interface GetSameProductsByCategoryParams{
+  categoryId: number
+  skip?: number
+  take?: number
+}
+export interface GetSameProductsByPriceParams {
+  price: number
+  priceDelta: number
+  skip?: number
+  take?: number
+}
 
 export type Product = Prisma.ProductGetPayload<{}>
 export type ProductCreate = Prisma.ProductUncheckedCreateInput
@@ -65,6 +76,9 @@ export interface ProductServiceContract {
     getNewProducts(skip?: number, take?: number): Promise<Product[]>
     getPopularProducts(skip?: number, take?: number): Promise<Product[]>
     getSameProducts(productId: number,limit: number,priceDelta?: number): Promise<Product[]>
+    getSameProductsByTitle(productId: number,skip?: number,take?: number): Promise<Product[]>
+    getSameProductsByCategory(params: GetSameProductsByCategoryParams): Promise<Product[]>
+    getSameProductsByPrice(params:GetSameProductsByPriceParams): Promise<Product[]>
 } 
 export interface ProductRepositoryContract {
     getAllProducts(take?: number, skip?: number): Promise<Product[]>
@@ -78,7 +92,10 @@ export interface ProductRepositoryContract {
     createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
     getNewProducts(skip?: number, take?: number): Promise<Product[]>
     getPopularProducts(skip?: number, take?: number): Promise<Product[]>
-    getSameProducts(productId: number,limit: number,priceDelta?: number): Promise<Product[]>
+    // getSameProducts(productId: number,limit: number,priceDelta?: number, skip?: number, take?: number): Promise<Product[]>
+    getSameProductsByTitle(productId: number,skip?: number,take?: number): Promise<Product[]>
+    getSameProductsByCategory(params: GetSameProductsByCategoryParams): Promise<Product[]>
+    getSameProductsByPrice(params:GetSameProductsByPriceParams): Promise<Product[]>
 }
 
 export interface ProductControllerContract {
