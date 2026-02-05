@@ -23,6 +23,24 @@ export const ProductController: ProductControllerContract = {
             console.log(`Unexpected error in getAllProducts -- Controller\nError:\n${error}`)
         }
     },
+    async getProductsAmount(req, res) {
+        try{
+            const cat = req.query.categoryId 
+            if (!cat){
+                res.status(200).json(await ProductService.getProductsAmount())
+                return
+            }
+            if (isNaN(+cat)){ 
+                res.status(404).json({"message": "Wrong/Bad categoryId"})
+                return
+            }
+            res.status(200).json(await ProductService.getProductsAmount(+cat))
+        }
+        catch(error){
+            res.status(500).json({"message": "Internal Server Error"})
+            console.log(`Unexpected error in getProductsAmount -- Controller\nError:\n${error}`)
+        }
+    },
     async getSuggestedProducts(req, res){
         try{
             const take = res.locals.take

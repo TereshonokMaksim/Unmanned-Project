@@ -53,5 +53,7 @@ export const ProductService: ProductServiceContract ={
     },
     async getSameProductsByTitle(productId, skip, take) {
         return ProductRepository.getSameProductsByTitle( productId, skip, take,)
+    async getProductsAmount(categoryId) {
+        return ProductRepository.getProductsAmount(categoryId)
     },
 }

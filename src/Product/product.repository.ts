@@ -156,7 +156,7 @@ export const ProductRepository: ProductRepositoryContract = {
                 take,
                 skip,
                 orderBy: {
-                    id: "desc"
+                    createdAt: "desc"
                 }
             })
         }
@@ -208,4 +208,12 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error
         }
 }
+    async getProductsAmount(categoryId) {
+        try{
+            return client.product.count({where: {categoryId}})
+        }
+        catch(error){
+            throw error
+        }
+    },
 };

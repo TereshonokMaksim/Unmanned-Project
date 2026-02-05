@@ -71,6 +71,7 @@ model Product {
   discount          Float
   media             String
   count             Int
+  createdAt DateTime @default(now())
   productForOrders  ProductForOrder[]
   productMainBlocks ProductMainBlock[]
 }
