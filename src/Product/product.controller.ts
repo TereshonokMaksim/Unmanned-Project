@@ -8,6 +8,15 @@ export const ProductController: ProductControllerContract = {
             const take = res.locals.take
             const skip = res.locals.skip
             const cat = req.query.productCategory 
+            const sameAs = req.query.sameAs
+            if (sameAs){
+                if (isNaN(+sameAs)){
+                    res.status(404).json({"message": "Wrong/Bad sameAs"})
+                    return
+                }
+                res.status(200).json(await ProductService.getSameProducts(+sameAs, res.locals.take))
+                return
+            }
             if (!cat){
                 res.status(200).json(await ProductService.getAllProducts(take, skip))
                 return
@@ -19,6 +28,12 @@ export const ProductController: ProductControllerContract = {
             res.status(200).json(await ProductService.getProductsByCategory(+cat, take, skip))
         }
         catch(error){
+            if (error instanceof Error){
+                if (error.message == "NOT_FOUND"){
+                    res.status(404).json({"message": "Product with that ID not found"})
+                    return 
+                }
+            }
             res.status(500).json({"message": "Internal Server Error"})
             console.log(`Unexpected error in getAllProducts -- Controller\nError:\n${error}`)
         }
@@ -188,43 +203,33 @@ export const ProductController: ProductControllerContract = {
             console.log(`Unexpected error in createInfoBlock -- Controller\nError:\n${error}`)
         }
     },
-    async getSameProducts(req, res) {
-        try {
-            const productId = Number(req.params.id)
-            const limit = Number(req.query.limit)
-            const priceDelta = Number(req.query.priceDelta)
+    // async getSameProducts(req, res) {
+    //     try {
+    //         const productId = Number(req.params.id)
+    //         const limit = Number(req.query.limit)
 
             
-            if (!req.params.id || isNaN(productId)) {
-            res.status(422).json({ message: "Wrong product id" })
-            return
-            }
+    //         if (!req.params.id || isNaN(productId)) {
+    //             res.status(422).json({ message: "Wrong product id" })
+    //             return
+    //         }
 
-            if (!req.query.limit || isNaN(limit)) {
-            res.status(422).json({ message: "Wrong limit" })
-            return
-            }
+    //         if (!req.query.limit || isNaN(limit)) {
+    //             res.status(422).json({ message: "Wrong limit" })
+    //             return
+    //         }
 
-            if (req.query.priceDelta && isNaN(priceDelta)) {
-            res.status(422).json({ message: "Wrong priceDelta" })
-            return
-            }
+    //         const products = await ProductService.getSameProducts(
+    //             productId,
+    //             limit
+    //         )
 
-            const products = await ProductService.getSameProducts(
-            productId,
-            limit,
-            priceDelta || 100
-            )
-
-            res.status(200).json(products)
-        } catch (error) {
-            res.status(500).json({ message: "Internal Server Error" })
-            console.log(
-            "Unexpected error in getSameProducts -- Controller\n",
-            error
-            )
-        }
-    },
+    //         res.status(200).json(products)
+    //     } catch (error) {
+    //         res.status(500).json({ message: "Internal Server Error" })
+    //         console.log( "Unexpected error in getSameProducts -- Controller\n", error)
+    //     }
+    // },
 }
 
     

@@ -164,13 +164,34 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error
         }
     },
-    async getSameProductsByTitle(productId, skip, take) {
+    async getSameProductsByTitle(originalProductId, lookForWord, skip, take) {
+        try {
+            return client.product.findMany({
+                where: {
+                    id: {
+                        not: originalProductId,
+                    },
+                    name: {
+                        contains: lookForWord
+                    }
+                },
+                skip,
+                take,
+            })
+        } catch (error) {
+            throw error
+        }
+    },
+    async getSameProductsByCategory(categoryId, idExclude, skip, take) {
         try {
             return client.product.findMany({
             where: {
-                id: {
-                not: productId,
-                },
+                categoryId,
+                NOT: {
+                    id: {
+                        in: idExclude
+                    }
+                }
             },
             skip,
             take,
@@ -179,35 +200,27 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error
         }
     },
-    async getSameProductsByCategory(params: GetSameProductsByCategoryParams) {
+    async getSameProductsByPrice(price, priceDelta, idExclude, skip, take) {
         try {
             return client.product.findMany({
             where: {
-                categoryId: params.categoryId,
+                price: {
+                    gte: price - priceDelta,
+                    lte: price + priceDelta,
+                },
+                NOT: {
+                    id: {
+                        in: idExclude
+                    }
+                }
             },
-            skip: params.skip,
-            take: params.take,
+            skip,
+            take,
             })
         } catch (error) {
             throw error
         }
     },
-    async getSameProductsByPrice(params: GetSameProductsByPriceParams) {
-        try {
-            return client.product.findMany({
-            where: {
-                price: {
-                gte: params.price - params.priceDelta,
-                lte: params.price + params.priceDelta,
-                },
-            },
-            skip: params.skip,
-            take: params.take,
-            })
-        } catch (error) {
-            throw error
-        }
-}
     async getProductsAmount(categoryId) {
         try{
             return client.product.count({where: {categoryId}})
