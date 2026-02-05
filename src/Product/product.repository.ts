@@ -1,6 +1,8 @@
 import {
     ProductCreate,
-    ProductRepositoryContract
+    ProductRepositoryContract,
+    GetSameProductsByCategoryParams,
+    GetSameProductsByPriceParams,
 } from "./product.types";
 
 import {client} from "../client/prismaClient"
@@ -162,6 +164,50 @@ export const ProductRepository: ProductRepositoryContract = {
             throw error
         }
     },
+    async getSameProductsByTitle(productId, skip, take) {
+        try {
+            return client.product.findMany({
+            where: {
+                id: {
+                not: productId,
+                },
+            },
+            skip,
+            take,
+            })
+        } catch (error) {
+            throw error
+        }
+    },
+    async getSameProductsByCategory(params: GetSameProductsByCategoryParams) {
+        try {
+            return client.product.findMany({
+            where: {
+                categoryId: params.categoryId,
+            },
+            skip: params.skip,
+            take: params.take,
+            })
+        } catch (error) {
+            throw error
+        }
+    },
+    async getSameProductsByPrice(params: GetSameProductsByPriceParams) {
+        try {
+            return client.product.findMany({
+            where: {
+                price: {
+                gte: params.price - params.priceDelta,
+                lte: params.price + params.priceDelta,
+                },
+            },
+            skip: params.skip,
+            take: params.take,
+            })
+        } catch (error) {
+            throw error
+        }
+}
     async getProductsAmount(categoryId) {
         try{
             return client.product.count({where: {categoryId}})

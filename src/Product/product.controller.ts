@@ -188,6 +188,46 @@ export const ProductController: ProductControllerContract = {
             console.log(`Unexpected error in createInfoBlock -- Controller\nError:\n${error}`)
         }
     },
+    async getSameProducts(req, res) {
+        try {
+            const productId = Number(req.params.id)
+            const limit = Number(req.query.limit)
+            const priceDelta = Number(req.query.priceDelta)
+
+            
+            if (!req.params.id || isNaN(productId)) {
+            res.status(422).json({ message: "Wrong product id" })
+            return
+            }
+
+            if (!req.query.limit || isNaN(limit)) {
+            res.status(422).json({ message: "Wrong limit" })
+            return
+            }
+
+            if (req.query.priceDelta && isNaN(priceDelta)) {
+            res.status(422).json({ message: "Wrong priceDelta" })
+            return
+            }
+
+            const products = await ProductService.getSameProducts(
+            productId,
+            limit,
+            priceDelta || 100
+            )
+
+            res.status(200).json(products)
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" })
+            console.log(
+            "Unexpected error in getSameProducts -- Controller\n",
+            error
+            )
+        }
+    },
+}
+
+    
     // async getSpecialProducts(req, res) {
     //     try{
     //         const {skip, take, new: anotherNew, popular} = req.query
@@ -231,4 +271,3 @@ export const ProductController: ProductControllerContract = {
     //         console.log(`Unexpected error in getSpecialProducts -- Controller\nError:\n${error}`)
     //     }
     // },
-}

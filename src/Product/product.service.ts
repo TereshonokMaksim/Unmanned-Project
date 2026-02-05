@@ -1,6 +1,8 @@
 import { ProductRepository } from "./product.repository";
 import {
     ProductServiceContract,
+    GetSameProductsByCategoryParams,
+    GetSameProductsByPriceParams,
 } from "./product.types";
 
 
@@ -43,6 +45,14 @@ export const ProductService: ProductServiceContract ={
     async getPopularProducts(skip, take) {
         return ProductRepository.getPopularProducts(skip, take)
     },
+    async getSameProductsByCategory(params) {
+        return ProductRepository.getSameProductsByCategory(params)
+    },
+    async getSameProductsByPrice(params) {
+        return ProductRepository.getSameProductsByPrice(params)
+    },
+    async getSameProductsByTitle(productId, skip, take) {
+        return ProductRepository.getSameProductsByTitle( productId, skip, take,)
     async getProductsAmount(categoryId) {
         return ProductRepository.getProductsAmount(categoryId)
     },

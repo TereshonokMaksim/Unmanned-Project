@@ -11,3 +11,5 @@ ProductRouter.get("/suggestions/", paginationMiddleware, ProductController.getSu
 ProductRouter.get("/:id", ProductController.getProductById)
 ProductRouter.post("/", ProductController.createProduct)
 ProductRouter.delete("/:id", ProductController.deleteProduct)
+ProductRouter.post("/block/", ProductController.createInfoBlock)
+ProductRouter.get("/:id", ProductController.getSameProducts)

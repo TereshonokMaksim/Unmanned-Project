@@ -3,7 +3,18 @@ import { Prisma } from '../generated/prisma/client'
 
 export interface ErrorMessage {
     message: string
-} 
+}
+export interface GetSameProductsByCategoryParams{
+  categoryId: number
+  skip?: number
+  take?: number
+}
+export interface GetSameProductsByPriceParams {
+  price: number
+  priceDelta: number
+  skip?: number
+  take?: number
+}
 
 export type Product = Prisma.ProductGetPayload<{}>
 export type ProductCreate = Prisma.ProductUncheckedCreateInput
@@ -64,6 +75,10 @@ export interface ProductServiceContract {
     // amazing
     getNewProducts(skip?: number, take?: number): Promise<Product[]>
     getPopularProducts(skip?: number, take?: number): Promise<Product[]>
+    getSameProducts(productId: number,limit: number,priceDelta?: number): Promise<Product[]>
+    getSameProductsByTitle(productId: number,skip?: number,take?: number): Promise<Product[]>
+    getSameProductsByCategory(params: GetSameProductsByCategoryParams): Promise<Product[]>
+    getSameProductsByPrice(params:GetSameProductsByPriceParams): Promise<Product[]>
     getProductsAmount(categoryId?: number): Promise<number>
 } 
 export interface ProductRepositoryContract {
@@ -78,6 +93,10 @@ export interface ProductRepositoryContract {
     createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
     getNewProducts(skip?: number, take?: number): Promise<Product[]>
     getPopularProducts(skip?: number, take?: number): Promise<Product[]>
+    // getSameProducts(productId: number,limit: number,priceDelta?: number, skip?: number, take?: number): Promise<Product[]>
+    getSameProductsByTitle(productId: number,skip?: number,take?: number): Promise<Product[]>
+    getSameProductsByCategory(params: GetSameProductsByCategoryParams): Promise<Product[]>
+    getSameProductsByPrice(params:GetSameProductsByPriceParams): Promise<Product[]>
     getProductsAmount(categoryId?: number): Promise<number>
 }
 
@@ -90,4 +109,6 @@ export interface ProductControllerContract {
     createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage>) => Promise<void>
     getProductsAmount: (req: Request<object, number | ErrorMessage, object, {categoryId?: string}>, res: Response<number | ErrorMessage>) => Promise<void>
     // getSpecialProducts: (req: Request<object, Product[] | ErrorMessage, object, {skip?: string, take?: string}>, res: Response<Product[] | ErrorMessage>) => Promise<void>
+    getSameProducts: (req: Request<{ id: string },Product[] | ErrorMessage,object,{limit?: string,priceDelta?: string}>,res: Response<Product[] | ErrorMessage>) => Promise<void>
+    // 
 }
