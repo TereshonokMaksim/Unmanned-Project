@@ -1,8 +1,6 @@
 import { ProductRepository } from "./product.repository";
 import {
     ProductServiceContract,
-    GetSameProductsByCategoryParams,
-    GetSameProductsByPriceParams,
     Product,
     FilteredProductHashTable,
     FilteredPopularityProductHashTable,
@@ -94,7 +92,6 @@ export const ProductService: ProductServiceContract ={
                 const foundProducts: Product[] = Object.values(nameFilteredPopularity[+foundTimes]!)
                 if (foundProducts.length >= limit - displayProducts.length){
                     displayProducts.splice(displayProducts.length, 0, ...foundProducts.slice(0, limit - displayProducts.length))
-                    console.log(foundTimes)
                     return displayProducts
                 }
                 else{
@@ -106,7 +103,7 @@ export const ProductService: ProductServiceContract ={
         for (let ft of Object.keys(nameFilteredPopularity)){
             displayProducts.splice(0, 0, ...Object.values(nameFilteredPopularity[+ft]!))
         }
-        if (original.categoryId){
+        if (original.categoryId || original.categoryId == 0){
             const similarByCategory = await ProductRepository.getSameProductsByCategory(original.categoryId, [productId, ...foundIds], 0, limit)
             if (similarByCategory.length >= limit - displayProducts.length){
                 displayProducts.splice(displayProducts.length, 0, ...similarByCategory.slice(0, limit - displayProducts.length))
@@ -122,7 +119,7 @@ export const ProductService: ProductServiceContract ={
             return displayProducts
         }
         displayProducts.splice(displayProducts.length, 0, ...similarByPrice)
-        return []
+        return displayProducts
     },
     async getProductsAmount(categoryId) {
         return ProductRepository.getProductsAmount(categoryId)

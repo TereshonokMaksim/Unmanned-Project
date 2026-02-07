@@ -221,7 +221,6 @@ export const UserController: UserControllerContract = {
     },
     async changePassword(request, response){
         try{    
-            console.log(passwordCodes)
             const body = request.body
             if (!body.password){
                 response.status(400).json({message: "New password is missing"})

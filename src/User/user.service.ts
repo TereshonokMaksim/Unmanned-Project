@@ -103,7 +103,6 @@ export const UserService: UserServiceContract = {
         return {idCode: identificationCode}
     },
     async checkCode(codeCheck, autoDelete, idCode?) {
-        console.log(passwordCodes, "start")
         let possibleCodeArray;
         if (idCode){
             possibleCodeArray = passwordCodes.filter(attempt => attempt.originalCode == idCode)
@@ -120,7 +119,6 @@ export const UserService: UserServiceContract = {
                 if (!autoDelete){
                     passwordCodes.push({code: "-1", originalCode: possibleCode.originalCode, email: possibleCode.email})
                 }
-                console.log(passwordCodes, "end")
                 return possibleCode
             }
         }

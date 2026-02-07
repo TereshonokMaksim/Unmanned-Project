@@ -74,7 +74,9 @@ export const ProductRepository: ProductRepositoryContract = {
     getProductsByCategory: async (categoryId, skip?, take?) => {
         try {
             const products = await client.product.findMany({
-                where: { categoryId },
+                where: { 
+                    categoryId: categoryId
+                },
                 skip: skip,
                 take: take
             });

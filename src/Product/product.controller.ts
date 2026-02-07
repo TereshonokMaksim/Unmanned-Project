@@ -25,7 +25,7 @@ export const ProductController: ProductControllerContract = {
                 res.status(404).json({"message": "Wrong/Bad categoryId"})
                 return
             }
-            res.status(200).json(await ProductService.getProductsByCategory(+cat, take, skip))
+            res.status(200).json(await ProductService.getProductsByCategory(+cat, skip, take))
         }
         catch(error){
             if (error instanceof Error){
@@ -40,7 +40,7 @@ export const ProductController: ProductControllerContract = {
     },
     async getProductsAmount(req, res) {
         try{
-            const cat = req.query.categoryId 
+            const cat = req.query.productCategory 
             if (!cat){
                 res.status(200).json(await ProductService.getProductsAmount())
                 return
@@ -62,7 +62,6 @@ export const ProductController: ProductControllerContract = {
             const skip = res.locals.skip
             const newProducts: string | undefined = req.query.new
             const popularProducts: string | undefined = req.query.popular
-            console.log(newProducts, popularProducts)
             if (newProducts){
                 if (newProducts == "true"){
                     res.status(200).json(await ProductService.getNewProducts(skip, take))
@@ -177,7 +176,8 @@ export const ProductController: ProductControllerContract = {
         try{
             const body = req.body
             const POSSIBLE_ALIGNS = ["column", "row", "rowReversed"]
-            if (!body.description || !body.media || !POSSIBLE_ALIGNS.includes(body.align) || !body.orderNum || !body.productId){
+            if (!body.description || !body.media || !POSSIBLE_ALIGNS.includes(body.align) || (!body.orderNum && body.orderNum !== 0) || !body.productId){
+                console.log(!body.description, !body.media, !POSSIBLE_ALIGNS.includes(body.align), !body.orderNum, !body.productId)
                 res.status(422).json({"message": "Wrong body data"})
                 return
             }
