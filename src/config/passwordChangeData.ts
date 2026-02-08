@@ -5,7 +5,7 @@ interface passwordCode {
     code: string
     originalCode: string
     email: string
-}
+};
 
-export const CODE_LENGTH = 12
+export const CODE_LENGTH = 12;
 export const passwordCodes: passwordCode[] = []

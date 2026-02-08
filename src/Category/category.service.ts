@@ -2,7 +2,7 @@ import { CategoryRepository } from "./category.repository";
 import { CategoryServiceContract } from "./category.types";
 
 
-export const CategoryService: CategoryServiceContract ={
+export const CategoryService: CategoryServiceContract = {
     getAllCategories: (take?) =>{
         return CategoryRepository.getAllCategories(take)
     },
@@ -14,7 +14,7 @@ export const CategoryService: CategoryServiceContract ={
 
         if (!category){
             throw new Error("NOT_FOUND")
-        }
+        };
         return CategoryRepository.deleteCategory(id)
     }
 }
