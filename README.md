@@ -1356,11 +1356,11 @@ All of the above is required for better readability and code maanagement
 
 ### Scripts
 
-This is a list of avalaible to use scripts, which will help you to faster launch this app.
+This is a list of avalaible to use scripts, which will help you to faster launch this application.
 
 - start - Starts project. If it outputs error check whether you are on stable version and did migrations.
 - migrate - Makes database migrations.
 - format - Formats Prisma schema file. If you are not planning on changing schema, you can safely forget about this.
-- gen - Generates Prisma files. Use if you have some unsolved problems linked with Prisma.
+- generate - Generates Prisma files. Use if you have some unsolved problems linked with Prisma.
 
 _Note: to use scripts you need to have installed npm with NodeJS and enter "npm run {script-name}" into terminal with opened folder of package.json_

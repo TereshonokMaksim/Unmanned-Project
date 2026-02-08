@@ -1,278 +1,199 @@
 import { ProductControllerContract } from "./product.types";
 import { ProductService } from "./product.service";
+import { isId, isNumber } from "../generic";
 
 
 export const ProductController: ProductControllerContract = {
     async getAllProducts(req, res){
         try{
-            const take = res.locals.take
-            const skip = res.locals.skip
-            const cat = req.query.productCategory 
-            const sameAs = req.query.sameAs
+            const take = res.locals.take;
+            const skip = res.locals.skip;
+            const cat = req.query.productCategory ;
+            const sameAs = req.query.sameAs;
             if (sameAs){
-                if (isNaN(+sameAs)){
-                    res.status(404).json({"message": "Wrong/Bad sameAs"})
+                const checkedSameAs = isId(sameAs);
+                if (checkedSameAs===false){
+                    res.status(404).json({"message": "Wrong/Bad sameAs"});
                     return
-                }
-                res.status(200).json(await ProductService.getSameProducts(+sameAs, res.locals.take))
+                };
+                res.status(200).json(await ProductService.getSameProducts(checkedSameAs, res.locals.take));
                 return
-            }
+            };
             if (!cat){
-                res.status(200).json(await ProductService.getAllProducts(take, skip))
+                res.status(200).json(await ProductService.getAllProducts(take, skip));
                 return
-            }
-            if (isNaN(+cat)){ 
-                res.status(404).json({"message": "Wrong/Bad categoryId"})
+            };
+            const checkedCategory = isId(cat);
+            if (checkedCategory===false){ 
+                res.status(404).json({"message": "Wrong/Bad categoryId"});
                 return
-            }
-            res.status(200).json(await ProductService.getProductsByCategory(+cat, skip, take))
+            };
+            res.status(200).json(await ProductService.getProductsByCategory(checkedCategory, skip, take))
         }
         catch(error){
             if (error instanceof Error){
-                if (error.message == "NOT_FOUND"){
-                    res.status(404).json({"message": "Product with that ID not found"})
+                if (error.cause == "NOT_FOUND"){
+                    res.status(404).json({"message": "Product with that ID not found"});
                     return 
                 }
-            }
-            res.status(500).json({"message": "Internal Server Error"})
+            };
+            res.status(500).json({"message": "Internal Server Error"});
             console.log(`Unexpected error in getAllProducts -- Controller\nError:\n${error}`)
         }
     },
     async getProductsAmount(req, res) {
         try{
-            const cat = req.query.productCategory 
+            const cat = req.query.productCategory; 
             if (!cat){
-                res.status(200).json(await ProductService.getProductsAmount())
+                res.status(200).json(await ProductService.getProductsAmount());
                 return
-            }
-            if (isNaN(+cat)){ 
-                res.status(404).json({"message": "Wrong/Bad categoryId"})
+            };
+            const checkedCategory = isId(cat);
+            if (checkedCategory === false){ 
+                res.status(404).json({"message": "Wrong/Bad categoryId"});
                 return
-            }
+            };
             res.status(200).json(await ProductService.getProductsAmount(+cat))
         }
         catch(error){
-            res.status(500).json({"message": "Internal Server Error"})
+            res.status(500).json({"message": "Internal Server Error"});
             console.log(`Unexpected error in getProductsAmount -- Controller\nError:\n${error}`)
         }
     },
     async getSuggestedProducts(req, res){
         try{
-            const take = res.locals.take
-            const skip = res.locals.skip
-            const newProducts: string | undefined = req.query.new
-            const popularProducts: string | undefined = req.query.popular
+            const take = res.locals.take;
+            const skip = res.locals.skip;
+            const newProducts: string | undefined = req.query.new;
+            const popularProducts: string | undefined = req.query.popular;
             if (newProducts){
                 if (newProducts == "true"){
                     res.status(200).json(await ProductService.getNewProducts(skip, take))
-                }
+                };
                 return
-            }
+            };
             if (popularProducts){
                 if (popularProducts == "true"){
                     res.status(200).json(await ProductService.getPopularProducts(skip, take))
-                }
+                };
                 return
-            }
+            };
             res.status(200).json(await ProductService.getAllProducts(take, skip))
         }
         catch(error){
-            res.status(500).json({"message": "Internal Server Error"})
+            res.status(500).json({"message": "Internal Server Error"});
             console.log(`Unexpected error in getSuggestedProducts -- Controller\nError:\n${error}`)
         }
-    }
-    ,
+    },
     async getProductById(req, res) {
         try{
-            const id = req.params.id
-            if (isNaN(+id)){
-                res.status(400).json({"message": "Wrong ID data"})
+            const id = req.params.id;
+            const checkedId = isId(id);
+            if (checkedId===false){
+                res.status(400).json({"message": "Wrong ID data"});
                 return
-            }
-            if (+id != Math.round(+id)){
-                // Float number as id
-                res.status(400).json({"message": "Wrong ID data"})
-                return
-            }
-            const product = await ProductService.getProductById(+id)
+            };
+            const product = await ProductService.getProductById(checkedId);
             if (!product){
-                res.status(404).json({"message": "Product with that ID not found"})
+                res.status(404).json({"message": "Product with that ID not found"});
                 return
-            }
+            };
             res.status(200).json(product)
         }
         catch(error){
-            res.status(500).json({"message": "Internal Server Error"})
+            res.status(500).json({"message": "Internal Server Error"});
             console.log(`Unexpected error in getProductById -- Controller\nError:\n${error}`)
         }
     },
     async createProduct(req, res) {
         try{
-            const body = req.body
+            const body = req.body;
             if (!body){
-                res.status(422).json({"message": "Wrong body data"})
+                res.status(422).json({"message": "Wrong body data"});
                 return
-            }
-            if (isNaN(body.price) || isNaN(body.discount) || isNaN(body.count)){
-                res.status(422).json({"message": "Wrong body data"})
+            };
+            if (isNumber(body.price)===false || isNumber(body.discount)===false || isNumber(body.count)===false){
+                res.status(422).json({"message": "Wrong body data"});
                 return
-            }
+            };
             try{
-                const newProduct = await ProductService.createProduct(body)
+                const newProduct = await ProductService.createProduct(body);
                 if (!newProduct){
-                    res.status(500).json({"message": "Internal Server Error"})
-                    console.log(`Unexpected error after creation of product in createProduct -- Controller\nNo additional error data provided.`)
+                    res.status(500).json({"message": "Internal Server Error"});
+                    console.log(`Unexpected error after creation of product in createProduct -- Controller\nNo additional error data provided.`);
                     return
-                }
+                };
                 res.status(201).json(newProduct)
             }
             catch(error){
-                res.status(500).json({"message": "Internal Server Error"})
+                if (error instanceof Error){
+                    if (error.cause == "BAD_QUERY"){
+                        res.status(422).json({"message": "Wrong body data"});
+                        return
+                    }
+                };
+                res.status(500).json({"message": "Internal Server Error"});
                 console.log(`Unexpected error while creating product in createProduct -- Controller\nError:\n${error}`)
             }
         }
         catch(error){
-            res.status(500).json({"message": "Internal Server Error"})
+            res.status(500).json({"message": "Internal Server Error"});
             console.log(`Unexpected error in createProduct -- Controller\nError:\n${error}`)
         }
     },
     async deleteProduct(req, res) {
         try{
-            const id = req.params.id
-            if (isNaN(+id)){
-                res.status(400).json({"message": "Wrong ID data"})
+            const id = req.params.id;
+            const checkedId = isId(id);
+            if (checkedId===false){
+                res.status(400).json({"message": "Wrong ID data"});
                 return
-            }
-            if (+id != Math.round(+id)){
-                // Float number as id
-                res.status(400).json({"message": "Wrong ID data"})
-                return
-            }
+            };
             let deletedProduct;
             try{
-                deletedProduct = await ProductService.deleteProduct(+id)
+                deletedProduct = await ProductService.deleteProduct(checkedId)
             }
             catch(error){
                 if (error instanceof Error){
-                    if (error.message == "NOT_FOUND"){
-                        res.status(404).json({"message": "Product with that ID not found"})
+                    if (error.cause == "NOT_FOUND"){
+                        res.status(404).json({"message": "Product with that ID not found"});
                         return 
                     }
-                }
+                };
                 throw error
-            }
+            };
             if (!deletedProduct){
-                res.status(404).json({"message": "Product with that ID not found"})
+                res.status(404).json({"message": "Product with that ID not found"});
                 return
-            }
+            };
             res.status(200).json(deletedProduct)
         }
-        catch(error){
-            res.status(500).json({"message": "Internal Server Error"})
+        catch (error){
+            res.status(500).json({"message": "Internal Server Error"});
             console.log(`Unexpected error in deleteProduct -- Controller\nError:\n${error}`)
         }
     },
     async createInfoBlock(req, res) {
-        try{
-            const body = req.body
-            const POSSIBLE_ALIGNS = ["column", "row", "rowReversed"]
-            if (!body.description || !body.media || !POSSIBLE_ALIGNS.includes(body.align) || (!body.orderNum && body.orderNum !== 0) || !body.productId){
-                console.log(!body.description, !body.media, !POSSIBLE_ALIGNS.includes(body.align), !body.orderNum, !body.productId)
-                res.status(422).json({"message": "Wrong body data"})
+        try {
+            const body = req.body;
+            const POSSIBLE_ALIGNS = ["column", "row", "rowReversed"];
+            if (!body.description || !body.media || !POSSIBLE_ALIGNS.includes(body.align) || isNumber(body.orderNum)===false || isId(body.productId)===false){
+                res.status(422).json({"message": "Wrong body data"});
                 return
-            }
-            if (isNaN(body.productId) || isNaN(body.orderNum)){
-                res.status(422).json({"message": "Wrong body data"})
-                return
-            }
-            const block = await ProductService.createProductBlock({productId: body.productId, title: body.title, description: body.description, media: body.media, align: body.align, orderNum: body.orderNum})
-            for (let detailBlockData of body.productDetailDatas){
-                let currentDetail = await ProductService.createProductDetail({name: detailBlockData.name, orderNum: detailBlockData.orderNum, productMainBlockId: block.id}) 
-                block.productDetailDatas.push(currentDetail)
-                for (let fontData of detailBlockData.productDetailBasics){
-                    currentDetail.productDetailBasics.push(fontData)
-                }
-                for (let fontData of detailBlockData.productDetailBolds){
-                    currentDetail.productDetailBolds.push(fontData)
-                }
-            }
+            };
+            const block = await ProductService.createProductBlock({
+                productId: body.productId, 
+                title: body.title, 
+                description: body.description, 
+                media: body.media, 
+                align: body.align, 
+                orderNum: body.orderNum,
+                productDetailDatas: body.productDetailDatas});
             res.status(201).json(block)
         }
-        catch(error){
-            res.status(500).json({"message": "Internal Server Error"})
+        catch (error){
+            res.status(500).json({"message": "Internal Server Error"});
             console.log(`Unexpected error in createInfoBlock -- Controller\nError:\n${error}`)
         }
-    },
-    // async getSameProducts(req, res) {
-    //     try {
-    //         const productId = Number(req.params.id)
-    //         const limit = Number(req.query.limit)
-
-            
-    //         if (!req.params.id || isNaN(productId)) {
-    //             res.status(422).json({ message: "Wrong product id" })
-    //             return
-    //         }
-
-    //         if (!req.query.limit || isNaN(limit)) {
-    //             res.status(422).json({ message: "Wrong limit" })
-    //             return
-    //         }
-
-    //         const products = await ProductService.getSameProducts(
-    //             productId,
-    //             limit
-    //         )
-
-    //         res.status(200).json(products)
-    //     } catch (error) {
-    //         res.status(500).json({ message: "Internal Server Error" })
-    //         console.log( "Unexpected error in getSameProducts -- Controller\n", error)
-    //     }
-    // },
+    }
 }
-
-    
-    // async getSpecialProducts(req, res) {
-    //     try{
-    //         const {skip, take, new: anotherNew, popular} = req.query
-    //         let cookedTake, cookedSkip
-    //         if (take){
-    //             if (isNaN(+take)){
-    //                 res.status(400).json({"message": "Wrong skip or take"})
-    //                 return
-    //             }
-    //             if (+take < 0 || Math.round(+take) != +take){
-    //                 res.status(400).json({"message": "Wrong skip or take"})
-    //                 return
-    //             }
-    //             cookedTake = +take
-    //         }
-    //         if (skip){
-    //             if (isNaN(+skip)){
-    //                 res.status(400).json({"message": "Wrong skip or take"})
-    //                 return
-    //             }
-    //             if (+skip < 0 || Math.round(+skip) != +skip){
-    //                 res.status(400).json({"message": "Wrong skip or take"})
-    //                 return
-    //             }
-    //             cookedSkip = +skip
-    //         }
-    //         if (anotherNew){
-    //             if (anotherNew == "true"){
-    //                 res.status(200).json(await ProductService.getNewProducts(cookedSkip, cookedTake))
-    //             }
-    //             return
-    //         }
-    //         if (popular){
-    //             if (popular == "true"){
-    //                 res.status(200).json(await ProductService.getPopularProducts(cookedSkip, cookedTake))
-    //             }
-    //         }
-    //     }
-    //     catch(error){
-    //         res.status(500).json({"message": "Internal Server Error"})
-    //         console.log(`Unexpected error in getSpecialProducts -- Controller\nError:\n${error}`)
-    //     }
-    // },

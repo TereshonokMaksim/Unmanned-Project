@@ -1,5 +1,6 @@
 import { client } from "../client/prismaClient";
 import { OrderRepositoryContract } from "./order.types";
+import { PrismaErrorCheck } from "../generic";
 
 
 export const OrderRepository: OrderRepositoryContract = {
@@ -12,7 +13,7 @@ export const OrderRepository: OrderRepositoryContract = {
             }) 
         }
         catch(error){
-            console.log(`-----------\ngetAllOrders Error:\n${error}\n-----------`)
+            PrismaErrorCheck(error, "getAllOrders");
             throw error
         }
     },
@@ -21,7 +22,7 @@ export const OrderRepository: OrderRepositoryContract = {
             return client.order.findUnique({where: {id: orderId}, include: {location: true, productForOrders: true, user: true}})
         }
         catch(error){
-            console.log(`-----------\ngetOrderById Error:\n${error}\n-----------`)
+            PrismaErrorCheck(error, "getOrderById");
             throw error
         }
     },
@@ -30,7 +31,7 @@ export const OrderRepository: OrderRepositoryContract = {
             return client.order.delete({where: {id: orderId}, include: {location: true, productForOrders: true, user: true}})
         }
         catch(error){
-            console.log(`-----------\ndeleteOrder Error:\n${error}\n-----------`)
+            PrismaErrorCheck(error, "deleteOrder");
             throw error
         }
     },
@@ -51,7 +52,7 @@ export const OrderRepository: OrderRepositoryContract = {
             }, include: {location: true, productForOrders: true, user: true}})
         }
         catch(error){
-            console.log(`-----------\ndeleteOrder Error:\n${error}\n-----------`)
+            PrismaErrorCheck(error, "createOrder", data);
             throw error
         }
     }

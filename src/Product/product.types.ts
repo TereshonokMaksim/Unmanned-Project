@@ -1,37 +1,38 @@
-import { Request, Response } from 'express'
-import { Prisma } from '../generated/prisma/client'
+import { Request, Response } from 'express';
+import { Prisma } from '../generated/prisma/client';
+import type { PaginationMiddlewareLocals, AuthMiddlewareLocals } from '../middlewares';
+
 
 export interface ErrorMessage {
     message: string
-}
+};
 export interface GetSameProductsByCategoryParams{
-  categoryId: number
-  skip?: number
-  take?: number
-}
+    categoryId: number
+    skip?: number
+    take?: number
+};
 export interface GetSameProductsByPriceParams {
-  price: number
-  priceDelta: number
-  skip?: number
-  take?: number
-}
+    price: number
+    priceDelta: number
+    skip?: number
+    take?: number
+};
 
+export type Product = Prisma.ProductGetPayload<{}>;
+export type ProductCreate = Prisma.ProductUncheckedCreateInput;
 
-export type Product = Prisma.ProductGetPayload<{}>
-export type ProductCreate = Prisma.ProductUncheckedCreateInput
-
-export type FontBlock = Prisma.ProductDetailBasicGetPayload<{}>
-export type FontBlockCreate = Prisma.ProductDetailBasicUncheckedCreateInput
+export type FontBlock = Prisma.ProductDetailBasicGetPayload<{}>;
+export type FontBlockCreate = Prisma.ProductDetailBasicUncheckedCreateInput;
 export type DetailFontBlockCreate = FontBlockCreate & {
     bold: boolean
-}
-export type DetailData = Prisma.ProductDetailDataGetPayload<{include: {productDetailBasics: true, productDetailBolds: true}}>
-export type DetailDataInput = Prisma.ProductDetailDataUncheckedCreateInput
+};
+export type DetailData = Prisma.ProductDetailDataGetPayload<{include: {productDetailBasics: true, productDetailBolds: true}}>;
+export type DetailDataInput = Prisma.ProductDetailDataUncheckedCreateInput;
 export type DetailDataCreate = Prisma.ProductDetailDataGetPayload<{}> & {
     detailBlocks?: DetailFontBlockCreate[]
-}
-export type ProductBlock = Prisma.ProductMainBlockGetPayload<{include: {productDetailDatas: true}}>
-export type ProductBlockInput = Prisma.ProductMainBlockUncheckedCreateInput
+};
+export type ProductBlock = Prisma.ProductMainBlockGetPayload<{include: {productDetailDatas: true}}>;
+export type ProductBlockInput = Prisma.ProductMainBlockUncheckedCreateInput;
 export type FullProductBlock = Prisma.ProductMainBlockGetPayload<{
     include: {
         productDetailDatas: {
@@ -41,8 +42,35 @@ export type FullProductBlock = Prisma.ProductMainBlockGetPayload<{
             }
         }
     }
-}>
-export type ProductBlockCreate = Omit<FullProductBlock, "id">
+}>;
+export type FullProductBlockInput = Prisma.ProductMainBlockGetPayload<{
+    include: {
+        productDetailDatas: {
+            include: {
+                productDetailBasics: {
+                    omit: {
+                        id: true,
+                        productDetailDataId: true
+                    }
+                }, 
+                productDetailBolds: {
+                    omit: {
+                        id: true,
+                        productDetailDataId: true
+                    }
+                }
+            }
+            omit: {
+                id: true,
+                productMainBlockId: true
+            }
+        },
+    },
+    omit: {
+        id: true
+    }
+}>;
+export type ProductBlockCreate = Omit<FullProductBlock, "id">;
 export type FullProduct = Prisma.ProductGetPayload<{
     include: {
         productMainBlocks: {
@@ -56,67 +84,54 @@ export type FullProduct = Prisma.ProductGetPayload<{
             }
         }
     }
-}>
-
-export interface PaginationMiddlewareLocals {
-    skip: number
-    take: number
-}
-
+}>;
 
 export interface FilteredProductHashTable {
     [key: number]: number
-}
+};
 
 export interface FilteredPopularityProductHashTable {
     [key: number]: {
         [key: number]: Product
     }
-}
+};
 
 export interface ProductServiceContract {
-    getAllProducts(take?: number, skip?: number): Promise<Product[]>
-    getProductById(id: number): Promise<FullProduct | null>
-    createProduct(data: ProductCreate): Promise<Product | null>
-    deleteProduct(id: number): Promise<Product | null>
-    getProductsByCategory(categoryId: number, take?: number, skip?: number): Promise<Product[]> 
-    createProductBlock(data: ProductBlockInput): Promise<FullProductBlock>
-    createProductDetail(data: DetailDataInput): Promise<DetailData>
-    createDetailBasicText(data: FontBlockCreate): Promise<FontBlock>
-    createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
-    // amazing
-    getNewProducts(skip?: number, take?: number): Promise<Product[]>
-    getPopularProducts(skip?: number, take?: number): Promise<Product[]>
-    getSameProducts(productId: number,limit: number): Promise<Product[]>
+    getAllProducts(take?: number, skip?: number): Promise<Product[]>,
+    getProductById(id: number): Promise<FullProduct | null>,
+    createProduct(data: ProductCreate): Promise<Product | null>,
+    deleteProduct(id: number): Promise<Product | null>,
+    getProductsByCategory(categoryId: number, take?: number, skip?: number): Promise<Product[]> ,
+    createProductBlock(data: FullProductBlockInput): Promise<FullProductBlock>,
+    getNewProducts(skip?: number, take?: number): Promise<Product[]>,
+    getPopularProducts(skip?: number, take?: number): Promise<Product[]>,
+    getSameProducts(productId: number,limit: number): Promise<Product[]>,
     getProductsAmount(categoryId?: number): Promise<number>
-} 
+} ;
 export interface ProductRepositoryContract {
-    getAllProducts(take?: number, skip?: number): Promise<Product[]>
-    getProductById(id: number): Promise<FullProduct | null>
-    createProduct(data:ProductCreate): Promise<Product>
-    deleteProduct(id: number): Promise<Product | null>
-    getProductsByCategory(categoryId: number, take?: number, skip?: number): Promise<Product[]> 
-    createProductBlock(data: ProductBlockInput): Promise<FullProductBlock>
-    createProductDetail(data: DetailDataInput): Promise<DetailData>
-    createDetailBasicText(data: FontBlockCreate): Promise<FontBlock>
-    createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>
-    getNewProducts(skip?: number, take?: number): Promise<Product[]>
-    getPopularProducts(skip?: number, take?: number): Promise<Product[]>
-    // getSameProducts(productId: number,limit: number,priceDelta?: number, skip?: number, take?: number): Promise<Product[]>
-    getSameProductsByTitle(productId: number, lookForWord: string, skip?: number,take?: number): Promise<Product[]>
-    getSameProductsByCategory(categoryId: number, idExclude: number[], skip?: number, take?: number): Promise<Product[]>
-    getSameProductsByPrice(price: number, priceDelta: number, idExclude: number[], skip?: number, take?: number): Promise<Product[]>
+    getAllProducts(take?: number, skip?: number): Promise<Product[]>,
+    getProductById(id: number): Promise<FullProduct | null>,
+    createProduct(data:ProductCreate): Promise<Product>,
+    deleteProduct(id: number): Promise<Product | null>,
+    getProductsByCategory(categoryId: number, take?: number, skip?: number): Promise<Product[]> ,
+    createProductBlock(data: ProductBlockInput): Promise<FullProductBlock>,
+    createProductDetail(data: DetailDataInput): Promise<DetailData>,
+    createDetailBasicText(data: FontBlockCreate): Promise<FontBlock>,
+    createDetailBoldText(data: FontBlockCreate): Promise<FontBlock>,
+    getNewProducts(skip?: number, take?: number): Promise<Product[]>,
+    getPopularProducts(skip?: number, take?: number): Promise<Product[]>,
+    getSameProductsByTitle(productId: number, lookForWord: string, skip?: number,take?: number): Promise<Product[]>,
+    getSameProductsByCategory(categoryId: number, idExclude: number[], skip?: number, take?: number): Promise<Product[]>,
+    getSameProductsByPrice(price: number, priceDelta: number, idExclude: number[], skip?: number, take?: number): Promise<Product[]>,
     getProductsAmount(categoryId?: number): Promise<number>
-}
+};
 
 export interface ProductControllerContract {
-    getSuggestedProducts: (req: Request<object, Product[] | ErrorMessage, object, { perPage?: string, page?: string, productCategory?: string, new?: string, popular?: string }>, res: Response<Product[] | ErrorMessage, PaginationMiddlewareLocals>) => Promise<void>
-    getAllProducts: (req: Request<object, Product[] | ErrorMessage, object, { perPage?: string, page?: string, productCategory?: string, sameAs?: string }>, res: Response<Product[] | ErrorMessage, PaginationMiddlewareLocals>) => Promise<void>
-    getProductById: (req: Request<{ id: string }, FullProduct | ErrorMessage>, res: Response<FullProduct | ErrorMessage>) => Promise<void>
-    createProduct: (req: Request<object, Product | ErrorMessage, ProductCreate>, res: Response<Product | ErrorMessage>) => Promise<void>
-    deleteProduct: (req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage>) => Promise<void>
-    createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage>) => Promise<void>
+    getSuggestedProducts: (req: Request<object, Product[] | ErrorMessage, object, { perPage?: string, page?: string, productCategory?: string, new?: string, popular?: string }>, res: Response<Product[] | ErrorMessage, PaginationMiddlewareLocals>) => Promise<void>,
+    getAllProducts: (req: Request<object, Product[] | ErrorMessage, object, { perPage?: string, page?: string, productCategory?: string, sameAs?: string }>, res: Response<Product[] | ErrorMessage, PaginationMiddlewareLocals>) => Promise<void>,
+    getProductById: (req: Request<{ id: string }, FullProduct | ErrorMessage>, res: Response<FullProduct | ErrorMessage>) => Promise<void>,
+    createProduct: (req: Request<object, Product | ErrorMessage, ProductCreate>, res: Response<Product | ErrorMessage, AuthMiddlewareLocals>) => Promise<void>,
+    deleteProduct: (req: Request<{ id: string }, Product | ErrorMessage>, res: Response<Product | ErrorMessage, AuthMiddlewareLocals>) => Promise<void>,
+    createInfoBlock: (req: Request<object, FullProductBlock | ErrorMessage, ProductBlockCreate>, res: Response<FullProductBlock | ErrorMessage, AuthMiddlewareLocals>) => Promise<void>,
     getProductsAmount: (req: Request<object, number | ErrorMessage, object, {productCategory?: string}>, res: Response<number | ErrorMessage>) => Promise<void>
-    // getSpecialProducts: (req: Request<object, Product[] | ErrorMessage, object, {skip?: string, take?: string}>, res: Response<Product[] | ErrorMessage>) => Promise<void>
-    // 
-}
+};

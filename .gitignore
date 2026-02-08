@@ -10,3 +10,4 @@ package-lock.json
 db/
 /src/generated/prisma
 .vscode
+.tests

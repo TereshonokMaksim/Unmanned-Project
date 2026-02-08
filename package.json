@@ -9,7 +9,7 @@
     "start": "ts-node src/server.ts",
     "migrate": "npx prisma migrate dev",
     "format": "npx prisma format",
-    "gen": "npx prisma generate"
+    "generate": "npx prisma generate"
   },
   "keywords": [],
   "author": "",

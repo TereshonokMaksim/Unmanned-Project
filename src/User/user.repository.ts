@@ -1,5 +1,6 @@
 import { UserRepositoryContract } from "./user.types";
 import { client } from "../client/prismaClient";
+import { PrismaErrorCheck } from "../generic";
 
 
 export const UserRepository: UserRepositoryContract = {
@@ -9,9 +10,8 @@ export const UserRepository: UserRepositoryContract = {
                 where: { email }
             })
         } catch (error) {
-            console.log(error)
+            PrismaErrorCheck(error, "getUserByEmail", {email});
             throw error
-            
         }
     },
     async createUser(userData) {
@@ -22,7 +22,7 @@ export const UserRepository: UserRepositoryContract = {
             })
         }
         catch (error) {
-            console.log(error)
+            PrismaErrorCheck(error, "createUser", userData);
             throw error
         }
     },
@@ -36,7 +36,7 @@ export const UserRepository: UserRepositoryContract = {
             })
         }
         catch (error){
-            console.log(error)
+            PrismaErrorCheck(error, "getUserSafelyById", {id});
             throw error
         }
     },
@@ -51,6 +51,7 @@ export const UserRepository: UserRepositoryContract = {
             )
         }
         catch(error){
+            PrismaErrorCheck(error, "editUser", {id, userData: data})
             throw error
         }
     },
@@ -65,18 +66,23 @@ export const UserRepository: UserRepositoryContract = {
             )
         }
         catch(error){
+            PrismaErrorCheck(error, "createUser", {id, newPassword});
             throw error
         }
     },
     async createLocation(data, userId){
         try {
             return client.location.create({
-                data: {...data, user: {connect: {id: userId}}},
-                
+                data: {
+                    user: {
+                        connect: {id: userId}
+                    },
+                    ...data
+                }
             })
         }
         catch (error) {
-            console.log(error)
+            PrismaErrorCheck(error, "createUser", {createLocationData: data, userId});
             throw error
         }
     },
@@ -88,7 +94,7 @@ export const UserRepository: UserRepositoryContract = {
             })
         }
         catch (error) {
-            console.log(error)
+            PrismaErrorCheck(error, "createUser", {editLocationData: data, id});
             throw error
         }
     },
@@ -99,7 +105,7 @@ export const UserRepository: UserRepositoryContract = {
             })
         }
         catch (error) {
-            console.log(error)
+            PrismaErrorCheck(error, "deleteLocation", {id})
             throw error
         }
     },
@@ -110,7 +116,7 @@ export const UserRepository: UserRepositoryContract = {
             })
         }
         catch (error) {
-            console.log(error)
+            PrismaErrorCheck(error, "createUser", {id});
             throw error
         }
     },
@@ -121,7 +127,7 @@ export const UserRepository: UserRepositoryContract = {
             })
         }
         catch (error) {
-            console.log(error)
+            PrismaErrorCheck(error, "createUser", {userId});
             throw error
         }
     }

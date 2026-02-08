@@ -9,4 +9,4 @@ export const transporter = createTransport({
         user: ENV.HOST_EMAIL_ADDRESS,
         pass: ENV.HOST_EMAIL_PASSWORD,
     },
-});
+})

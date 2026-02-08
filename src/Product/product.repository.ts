@@ -1,74 +1,21 @@
 import {
     ProductCreate,
-    ProductRepositoryContract,
-    GetSameProductsByCategoryParams,
-    GetSameProductsByPriceParams,
+    ProductRepositoryContract
 } from "./product.types";
-
-import {client} from "../client/prismaClient"
+import { client } from "../client/prismaClient"
+import { PrismaErrorCheck } from "../generic/repositoryErrors";
 
 
 export const ProductRepository: ProductRepositoryContract = {
     getAllProducts: async (take?, skip?) => {
         try {
-            const products = await client.product.findMany({
+            return await client.product.findMany({
                 take: take,
                 skip: skip
-            });
-            return products;
+            })
         } catch (error) {
-            // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            //     if (error === "P2024") {
-            //         console.log("Timed out fetching a new connection from the connection pool");
-            //     }
-            // }
-            throw error;
-        }
-    },
-
-
-    getProductById: async (id) => {
-        try {
-            const product = await client.product.findUnique({
-                where: { id },
-                include: {
-                    productMainBlocks: {
-                        include: {
-                            productDetailDatas: {
-                                include: {
-                                    productDetailBasics: true, 
-                                    productDetailBolds: true
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            return product;
-        } catch (error) {
-            throw error;
-        }
-    },
-
-    createProduct: async (data: ProductCreate) => {
-        try {
-            const product = await client.product.create({
-                data
-            });
-            return product;
-        } catch (error) {
-            throw error;
-        }
-    },
-
-    deleteProduct: async (id) => {
-        try {
-            const deleted = await client.product.delete({
-                where: { id }
-            });
-            return deleted;
-        } catch (error) {
-            throw error;
+            PrismaErrorCheck(error, "getAllProducts");
+            throw error
         }
     },
     getProductsByCategory: async (categoryId, skip?, take?) => {
@@ -82,37 +29,81 @@ export const ProductRepository: ProductRepositoryContract = {
             });
             return products;
         } catch (error) {
+            PrismaErrorCheck(error, "getProductsByCategory");
+            throw error;
+        }
+    },
+    getProductById: async (id) => {
+        try {
+            return await client.product.findUnique({
+                where: { id },
+                include: {
+                    productMainBlocks: {
+                        include: {
+                            productDetailDatas: {
+                                include: {
+                                    productDetailBasics: true, 
+                                    productDetailBolds: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        } catch (error) {
+            PrismaErrorCheck(error, "getProductById", {id});
+            throw error;
+        }
+    },
+    createProduct: async (data: ProductCreate) => {
+        try {
+            return await client.product.create({
+                data
+            })
+        } catch (error) {
+            PrismaErrorCheck(error, "createProduct", data);
+            throw error;
+        }
+    },
+    deleteProduct: async (id) => {
+        try {
+            return await client.product.delete({
+                where: { id }
+            })
+        } catch (error) {
+            PrismaErrorCheck(error, "deleteProduct", {id});
             throw error;
         }
     },
     createDetailBasicText: async (data) => {
         try {
-            const newFontBlock = await client.productDetailBasic.create({
+            return await client.productDetailBasic.create({
                 data: data
-            });
-            return newFontBlock;
+            })
         } catch (error) {
-            throw error;
+            PrismaErrorCheck(error, "createDetailBasicText", data);
+            throw error
         }
     },
     createDetailBoldText: async (data) => {
         try {
-            return client.productDetailBold.create({data: data});
+            return client.productDetailBold.create({data: data})
         } catch (error) {
+            PrismaErrorCheck(error, "createDetailBoldText", data);
             throw error;
         }
     },
     createProductDetail: async (data) => {
         try {
-            const newDetailBlock = await client.productDetailData.create({
+            return await client.productDetailData.create({
                 data: data,
                 include: {
                     productDetailBolds: true,
                     productDetailBasics: true
                 }
-            });
-            return newDetailBlock;
+            })
         } catch (error) {
+            PrismaErrorCheck(error, "createProductDetail", data);
             throw error;
         }
     },
@@ -128,8 +119,9 @@ export const ProductRepository: ProductRepositoryContract = {
                         }
                     }
                 }
-            });
+            })
         } catch (error) {
+            PrismaErrorCheck(error, "createProductBlock", data);
             throw error;
         }
     },
@@ -149,6 +141,7 @@ export const ProductRepository: ProductRepositoryContract = {
             })
         }
         catch(error){
+            PrismaErrorCheck(error, "getPopularProducts");
             throw error
         }
     },
@@ -163,6 +156,7 @@ export const ProductRepository: ProductRepositoryContract = {
             })
         }
         catch(error){
+            PrismaErrorCheck(error, "getNewProducts");
             throw error
         }
     },
@@ -181,45 +175,48 @@ export const ProductRepository: ProductRepositoryContract = {
                 take,
             })
         } catch (error) {
+            PrismaErrorCheck(error, "getSameProductsByTitle");
             throw error
         }
     },
     async getSameProductsByCategory(categoryId, idExclude, skip, take) {
         try {
             return client.product.findMany({
-            where: {
-                categoryId,
-                NOT: {
-                    id: {
-                        in: idExclude
+                where: {
+                    categoryId,
+                    NOT: {
+                        id: {
+                            in: idExclude
+                        }
                     }
-                }
-            },
-            skip,
-            take,
+                },
+                skip,
+                take,
             })
         } catch (error) {
+            PrismaErrorCheck(error, "getSameProductsByCategory");
             throw error
         }
     },
     async getSameProductsByPrice(price, priceDelta, idExclude, skip, take) {
         try {
             return client.product.findMany({
-            where: {
-                price: {
-                    gte: price - priceDelta,
-                    lte: price + priceDelta,
-                },
-                NOT: {
-                    id: {
-                        in: idExclude
+                where: {
+                    price: {
+                        gte: price - priceDelta,
+                        lte: price + priceDelta,
+                    },
+                    NOT: {
+                        id: {
+                            in: idExclude
+                        }
                     }
-                }
-            },
-            skip,
-            take,
+                },
+                skip,
+                take,
             })
         } catch (error) {
+            PrismaErrorCheck(error, "getSameProductsByPrice");
             throw error
         }
     },
@@ -228,6 +225,7 @@ export const ProductRepository: ProductRepositoryContract = {
             return client.product.count({where: {categoryId}})
         }
         catch(error){
+            PrismaErrorCheck(error, "getProductsAmount");
             throw error
         }
     },
